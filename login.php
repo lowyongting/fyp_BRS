@@ -42,17 +42,17 @@ include("masterpage/navbar.php");
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4 login-box">
-                <form action="login.php" method="post">
+                <form action="authenticate.php" method="post">
                         
                         <div class = "form-group fontuser">
                            <label for="username">Username or Email</label>
-                            <input type="text" class="form-control form-control-lg rounded-pill" name="username" placeholder="username / email">
+                            <input type="text" class="form-control form-control-lg rounded-pill" name="username" placeholder="username / email" required>
                             <i class="fa fa-user fa-lg"></i> 
                         </div>
                         
                         <div class = "form-group fontpassword">
                            <label for="password">Password</label>
-                            <input type="password" class="form-control form-control-lg rounded-pill" name="password" placeholder="password">
+                            <input type="password" class="form-control form-control-lg rounded-pill" name="password" placeholder="password" required>
                             <i class="fa fa-lock fa-lg"></i> 
                         </div>
                         
@@ -70,8 +70,24 @@ include("masterpage/navbar.php");
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <?php 
+        if(isset($_SESSION['login_sts']) && $_SESSION['login_sts'] != "")
+        {
+            ?>
+                <script>
+                    swal({
+                        title: "<?php echo $_SESSION['login_sts']; ?>",
+                        icon: "<?php echo $_SESSION['sts_code']; ?>",
+                        button: "Ok",
+                    });
+                </script>
+            <?php
+                unset($_SESSION['login_sts']);
+        }
+    ?>
+
 </body>
 </html>	

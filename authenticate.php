@@ -53,7 +53,40 @@ if(isset($_POST['signup-btn'])) {
         $_SESSION['sts_code'] = "error";
         header('Location: register.php');
     }
-    
+
+}
+
+// if user clicks on login
+if(isset($_POST['login-btn'])){
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    $login_query = "SELECT * FROM users WHERE email='$username' OR username='$username' ";
+    $login_query_result = mysqli_query($conn, $login_query);
+
+    if(mysqli_num_rows($login_query_result) > 0) {
+
+        $row = mysqli_fetch_assoc($login_query_result);
+        $stored_pass = $row['password'];
+
+        if($password == $stored_pass) 
+        {
+            $_SESSION['user'] = $row['username'];
+            header('Location: index.php');
+        }
+        else 
+        {
+            $_SESSION['login_sts'] = "Login Failed! Username or password incorrect! ";
+            $_SESSION['sts_code'] = "error";
+            header('Location: login.php');
+        }
+    }
+    else {
+        $_SESSION['login_sts'] = "Login Failed! Username or password incorrect! ";
+        $_SESSION['sts_code'] = "error";
+        header('Location: login.php');
+    }
+
 }
 
 ?>
