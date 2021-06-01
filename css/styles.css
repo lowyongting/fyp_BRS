@@ -49,11 +49,11 @@ body {
 }
 #myCarousel {
   border: 1px solid #ccc;
-  margin-top: 10px;
+  margin-top: 5%;
 }
 #myCarousel img {
   width: 100%;
-  max-height: 350px;
+  max-height: 300px;
 }
 #new {
   font-weight: 800;
@@ -77,19 +77,6 @@ body {
   background: #fff;
   border: 1px solid #deeaee;
   border-radius: 10px;
-}
-#author {
-  margin-top: 20px;
-  background: #fff;
-  border: 1px solid #deeaee;
-  border-radius: 10px;
-}
-#author .row {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-#author h3 {
-  color: rgb(228, 55, 25);
 }
 footer {
   background: #101010 !important;
