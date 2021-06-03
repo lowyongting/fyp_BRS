@@ -66,7 +66,7 @@ session_start();
     <h3 style="text-align: left;">POPULAR BOOKS</h3>
         <div class="row">
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="description.php?ID=NEW-1&category=new">
+                    <a href="book.php">
                         <div class="book-block">
                             <img class="block-center book-image" src="">
                             <hr>
@@ -75,7 +75,7 @@ session_start();
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="description.php?ID=NEW-2&category=new">
+                    <a href="book.php">
                     <div class="book-block">
                         <img class="block-center book-image" src="">
                         <hr>
@@ -84,7 +84,7 @@ session_start();
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="description.php?ID=NEW-3&category=new">
+                    <a href="book.php">
                     <div class="book-block">
                         <img class="block-center book-image" src="">
                         <hr>
@@ -93,7 +93,7 @@ session_start();
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="description.php?ID=NEW-4&category=new">
+                    <a href="book.php">
                     <div class="book-block">
                         <img class="block-center book-image" src="">
                         <hr>
@@ -104,7 +104,7 @@ session_start();
         </div>
         <div class="row">
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="description.php?ID=NEW-1&category=new">
+                    <a href="book.php">
                         <div class="book-block">
                             <img class="block-center book-image" src="">
                             <hr>
@@ -113,7 +113,7 @@ session_start();
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="description.php?ID=NEW-2&category=new">
+                    <a href="book.php">
                     <div class="book-block">
                         <img class="block-center book-image" src="">
                         <hr>
@@ -122,7 +122,7 @@ session_start();
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="description.php?ID=NEW-3&category=new">
+                    <a href="book.php">
                     <div class="book-block">
                         <img class="block-center book-image" src="">
                         <hr>
@@ -131,7 +131,7 @@ session_start();
                     </a>
                 </div>
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="description.php?ID=NEW-4&category=new">
+                    <a href="book.php">
                     <div class="book-block">
                         <img class="block-center book-image" src="">
                         <hr>
@@ -177,6 +177,36 @@ session_start();
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <?php 
+        if (isset($_GET['login']) && $_GET['login'] == "false") {
+            ?>
+            <script>
+                swal({
+                        title: "Please login to browse the book.",
+                        icon: "info",
+                        button: "Ok"
+                });
+            </script>
+        <?php
+        }    
+    ?>
+
+    <?php 
+        if (isset($_GET['message'])) {
+            $mssg = $_GET['message'];
+            ?>
+            <script>
+                swal({
+                        title: "<?php echo $mssg ?>",
+                        icon: "success",
+                        button: "Ok"
+                });
+            </script>
+        <?php
+        }    
+    ?>
 
 </body>
 </html>	

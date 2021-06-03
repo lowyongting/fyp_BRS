@@ -1,20 +1,21 @@
 $.getJSON("https://www.googleapis.com/books/v1/volumes?q=2021%20books",
   function (data) {
-    var indexOfImage = 0;
-    var indexOfBookTitle = 0;
+
+    var indexOfData = 0;
 
     console.log(data);
 
     $(".book-image").each(function () {
-      let imgLinks = data.items[indexOfImage].volumeInfo.imageLinks.thumbnail;
-      $(this).attr("src", imgLinks);
-      indexOfImage++;
-    });
+      let imgLinks = data.items[indexOfData].volumeInfo.imageLinks.thumbnail;
+      let bookID = data.items[indexOfData].id;
+      let bookTitle = data.items[indexOfData].volumeInfo.title;
 
-    $(".book-title").each(function () {
-      let bookTitle = data.items[indexOfBookTitle].volumeInfo.title;
-      $(this).text(bookTitle);
-      indexOfBookTitle++;
+      $(this).attr("src", imgLinks);
+      $(this).parent().parent().attr("href", "book.php?id=" + bookID);
+      $(this).next().next().text(bookTitle);
+
+      indexOfData++;
     });
+    
   }
 );

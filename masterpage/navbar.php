@@ -17,7 +17,7 @@
             else
             {   echo' <li> <a href="#" class="btn btn-lg"> Hello ' .$_SESSION['user']. '.</a></li>
                       <li> <a href="cart.php" class="btn btn-lg"> <span class="glyphicon glyphicon-shopping-cart"></span> Cart </a> </li>; 
-                      <li> <a href="destroy.php" class="btn btn-lg"> <span class="glyphicon glyphicon-log-out"></span> LogOut </a> </li>';
+                      <li> <a href="logout.php" class="btn btn-lg"> <span class="glyphicon glyphicon-log-out"></span> LogOut </a> </li>';
                     
             }
             ?>
