@@ -29,6 +29,10 @@ if(isset($_SESSION['book_data_array'])) {
             overflow-x: auto;
             white-space: pre-wrap;
         }
+        .current-book-image {
+            margin: 20px auto 10px;
+            height: 400px;
+        }
     </style>
     
 </head>
@@ -55,23 +59,53 @@ if(isset($_SESSION['book_data_array'])) {
                                 echo '';
                         }
                     }
-                ?>" alt="" class="center-block" style="height:400px;margin:0 auto;">
+                ?>" alt="" class="center-block current-book-image">
             </div>
 
             <div class="col-sm-12 col-md-12 col-lg-6">
                 <h2> <?php echo $_SESSION['current_book']['volumeInfo']['title']; ?></h2>
 
-                <pre>AUTHOR                <?php echo $_SESSION['current_book']['volumeInfo']['authors'][0]; ?> </pre>
+                <pre>AUTHOR                <?php 
+                                                if(array_key_exists('authors',$_SESSION['current_book']['volumeInfo']))
+                                                    echo $_SESSION['current_book']['volumeInfo']['authors'][0];
+                                                else
+                                                    echo "unknown";
+                                            ?> </pre>
 
-                <pre>PUBLISHER             <?php echo $_SESSION['current_book']['volumeInfo']['publisher']; ?> </pre> 
+                <pre>PUBLISHER             <?php 
+                                                if(array_key_exists('publisher',$_SESSION['current_book']['volumeInfo']))
+                                                    echo $_SESSION['current_book']['volumeInfo']['publisher']; 
+                                                else
+                                                    echo "unknown";
+                                            ?> </pre> 
                 
-                <pre>PUBLISHED DATE        <?php echo $_SESSION['current_book']['volumeInfo']['publishedDate']; ?> </pre>
+                <pre>PUBLISHED DATE        <?php 
+                                                if(array_key_exists('publishedDate',$_SESSION['current_book']['volumeInfo']))
+                                                    echo $_SESSION['current_book']['volumeInfo']['publishedDate']; 
+                                                else
+                                                    echo "unknown";
+                                            ?> </pre>
 
-                <pre>CATEGORY              <?php echo $_SESSION['current_book']['volumeInfo']['categories'][0]; ?> </pre> 
+                <pre>CATEGORY              <?php 
+                                                if(array_key_exists('categories',$_SESSION['current_book']['volumeInfo']))
+                                                    echo $_SESSION['current_book']['volumeInfo']['categories'][0]; 
+                                                else
+                                                    echo "unknown";
+                                            ?> </pre> 
 
-                <pre>PAGES                 <?php echo $_SESSION['current_book']['volumeInfo']['pageCount']; ?> </pre> 
+                <pre>PAGES                 <?php 
+                                                if(array_key_exists('pageCount',$_SESSION['current_book']['volumeInfo']))
+                                                    echo $_SESSION['current_book']['volumeInfo']['pageCount']; 
+                                                else
+                                                    echo "unknown";
+                                            ?> </pre> 
 
-                <pre>DESCRIPTION <br>   <p><?php echo $_SESSION['current_book']['volumeInfo']['description']; ?> </p></pre>
+                <pre>DESCRIPTION <br>   <p><?php 
+                                                if(array_key_exists('description',$_SESSION['current_book']['volumeInfo']))
+                                                    echo $_SESSION['current_book']['volumeInfo']['description']; 
+                                                else
+                                                    echo "unknown";
+                                            ?> </p></pre>
                 
             </div>
         </div>
