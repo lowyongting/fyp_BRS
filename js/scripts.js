@@ -2,7 +2,7 @@ var book_data;
 var jsondata;
 
 $.getJSON(
-  "https://www.googleapis.com/books/v1/volumes?q=2021%20books",
+  "https://www.googleapis.com/books/v1/volumes?q=best%20selling%20books",
   function (data) {
     var indexOfData = 0;
 
@@ -39,7 +39,6 @@ $.getJSON(
       }
     };
 
-    // https://javascript.info/xmlhttprequest
   }
 );
 

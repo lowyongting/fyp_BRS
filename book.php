@@ -9,6 +9,18 @@ if(isset($_SESSION['book_data_array'])) {
     $book_data_arr = $_SESSION['book_data_array'];
 }
 
+if(isset($_GET['id'])) 
+{
+    $book_id = $_GET['id'];
+    foreach($book_data_arr as $book) 
+    {
+        if($book['id'] == $book_id)
+        {
+            $_SESSION['current_book'] = $book;
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +30,7 @@ if(isset($_SESSION['book_data_array'])) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Book Recommender System</title>
+    <title> <?php echo $_SESSION['current_book']['volumeInfo']['title']; ?> </title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
@@ -33,6 +45,11 @@ if(isset($_SESSION['book_data_array'])) {
             margin: 20px auto 10px;
             height: 400px;
         }
+        .btn-addcart {
+            display: block;
+            width: 50%;
+            margin: 20px auto;
+        }
     </style>
     
 </head>
@@ -44,22 +61,9 @@ if(isset($_SESSION['book_data_array'])) {
     <div id="books" class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-6">
-                <img src="<?php
-                    if(isset($_GET['id'])) 
-                    {
-                        $book_id = $_GET['id'];
-                        foreach($book_data_arr as $book) 
-                        {
-                            if($book['id'] == $book_id)
-                            {
-                                $_SESSION['current_book'] = $book;
-                                echo $_SESSION['current_book']['volumeInfo']['imageLinks']['thumbnail'];
-                            }
-                            else
-                                echo '';
-                        }
-                    }
-                ?>" alt="" class="center-block current-book-image">
+                <img src="<?php echo $_SESSION['current_book']['volumeInfo']['imageLinks']['thumbnail']; ?>" 
+                alt="" class="center-block current-book-image">
+                <button class="btn btn-lg btn-danger btn-addcart"> ADD TO CART </button>
             </div>
 
             <div class="col-sm-12 col-md-12 col-lg-6">
