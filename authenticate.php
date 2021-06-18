@@ -72,6 +72,7 @@ if(isset($_POST['login-btn'])){
         if($password == $stored_pass) 
         {
             $_SESSION['user'] = $row['username'];
+            $_SESSION['user_id'] = $row['id'];
             header('Location: index.php');
         }
         else 

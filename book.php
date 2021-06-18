@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+include("db.php");
+
 if(!isset($_SESSION['user'])) {
     header("Location:index.php?login=false");
 }
@@ -18,6 +20,35 @@ if(isset($_GET['id']))
         {
             $_SESSION['current_book'] = $book;
         }
+    }
+}
+
+//If the add to cart button is clicked
+if(isset($_POST['add-to-cart'])) {
+    $book_title = $_SESSION['current_book']['volumeInfo']['title'];
+    $book_author = $_SESSION['current_book']['volumeInfo']['authors'][0];
+    $book_publisher = $_SESSION['current_book']['volumeInfo']['publisher'];
+    $book_category = $_SESSION['current_book']['volumeInfo']['categories'][0];
+    $book_img_link = $_SESSION['current_book']['volumeInfo']['imageLinks']['thumbnail'];
+
+    // mysqli_real_escape_string() function escapes special characters in a string for use in an SQL query
+    $b_title = mysqli_real_escape_string($conn, $book_title);
+    $b_author = mysqli_real_escape_string($conn, $book_author);
+    $b_publisher = mysqli_real_escape_string($conn, $book_publisher);
+    $b_category = mysqli_real_escape_string($conn, $book_category);
+    $b_price = mysqli_real_escape_string($conn, $_SESSION['book_price']);
+    $b_img_link = mysqli_real_escape_string($conn, $book_img_link);
+
+    $addcart_query = "INSERT INTO cart (user_id, book_id, book_title, book_author, book_publisher, book_category, book_price, book_img_link) VALUES ('".$_SESSION['user_id']."', '$book_id', '$b_title', '$b_author', '$b_publisher', '$b_category', '$b_price', '$b_img_link')";
+    if(mysqli_query($conn, $addcart_query)) 
+    {
+        $_SESSION['addcart_sts'] = "Item: ".$book_title." has been successfully added to the cart!";
+        $_SESSION['sts_code'] = "success";
+    }
+    else
+    {
+        $_SESSION['addcart_sts'] = "Server internal error! ";
+        $_SESSION['sts_code'] = "error";
     }
 }
 
@@ -63,7 +94,19 @@ if(isset($_GET['id']))
             <div class="col-sm-12 col-md-12 col-lg-6">
                 <img src="<?php echo $_SESSION['current_book']['volumeInfo']['imageLinks']['thumbnail']; ?>" 
                 alt="" class="center-block current-book-image">
-                <button class="btn btn-lg btn-danger btn-addcart"> ADD TO CART </button>
+                <form method="post">
+                    <?php
+                        $check_if_item_added_query = "SELECT * FROM cart WHERE book_id='$book_id' AND user_id='".$_SESSION['user_id']."' ";
+                        $check_if_item_added_query_result = mysqli_query($conn, $check_if_item_added_query);
+
+                        if(mysqli_num_rows($check_if_item_added_query_result) > 0) {
+                            echo "<button type='submit' name='add-to-cart' class='btn btn-lg btn-danger btn-addcart' disabled> ITEM ADDED TO CART </button>";
+                        }
+                        else {
+                            echo "<button type='submit' name='add-to-cart' class='btn btn-lg btn-danger btn-addcart'> ADD TO CART </button>";
+                        }
+                    ?>
+                </form>
             </div>
 
             <div class="col-sm-12 col-md-12 col-lg-6">
@@ -103,6 +146,28 @@ if(isset($_GET['id']))
                                                 else
                                                     echo "unknown";
                                             ?> </pre> 
+
+                <pre>PRICE                 <?php 
+                                                if(array_key_exists('saleability',$_SESSION['current_book']['saleInfo'])) {
+
+                                                    if($_SESSION['current_book']['saleInfo']['saleability'] == "FOR_SALE") {
+
+                                                        if(array_key_exists('retailPrice',$_SESSION['current_book']['saleInfo'])) 
+                                                        {
+                                                            $_SESSION['book_price'] = $_SESSION['current_book']['saleInfo']['retailPrice']['currencyCode']." ".
+                                                                                      $_SESSION['current_book']['saleInfo']['retailPrice']['amount'];    
+                                                        }
+                                                    }
+                                                    else {
+                                                        $_SESSION['book_price'] = "NOT FOR SALE";
+                                                    }
+                                                    echo $_SESSION['book_price'];
+                                                }
+                                                else {
+                                                    $_SESSION['book_price'] = "unknown";
+                                                    echo $_SESSION['book_price'];
+                                                }
+                                            ?> </pre>
 
                 <pre>DESCRIPTION <br>   <p><?php 
                                                 if(array_key_exists('description',$_SESSION['current_book']['volumeInfo']))
@@ -149,6 +214,24 @@ if(isset($_GET['id']))
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <?php 
+        if (isset($_SESSION['addcart_sts']) && $_SESSION['addcart_sts'] != "") 
+        {
+            ?>
+            <script>
+                swal({
+                        title: "<?php echo $_SESSION['addcart_sts']; ?>",
+                        icon: "<?php echo $_SESSION['sts_code']; ?>",
+                        button: "Ok"
+                });
+            </script>
+            <?php
+                unset($_SESSION['addcart_sts']);
+        }    
+    ?>
 
 </body>
 </html>	
