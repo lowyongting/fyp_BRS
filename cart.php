@@ -1,8 +1,33 @@
 <?php
 session_start();
 
+require ('db.php');
+
 if(!isset($_SESSION['user'])) {
     header("Location:index.php?login=false");
+}
+
+//If the remove button is clicked
+if(isset($_GET['remove'])) {
+    $remove_book_id = $_GET['remove'];
+
+    $get_book_title_query = "SELECT * FROM cart WHERE book_id='$remove_book_id' ";
+    $get_item_result = mysqli_query($conn, $get_book_title_query);
+    if(mysqli_num_rows($get_item_result) > 0) {
+
+        $item_row = mysqli_fetch_assoc($get_item_result);
+        $book_title = $item_row['book_title'];
+        $remove_item_query = "DELETE FROM cart WHERE book_id='$remove_book_id' AND user_id='".$_SESSION['user_id']."' ";
+
+        if(mysqli_query($conn, $remove_item_query)) {
+            $_SESSION['removecart_sts'] = $book_title." has been successfully removed from your cart!";
+            $_SESSION['sts_code'] = "success";
+        }
+        else {
+            $_SESSION['removecart_sts'] = " Database query execution failed! ";
+            $_SESSION['sts_code'] = "error";
+        }
+    }
 }
 
 ?>
@@ -27,122 +52,104 @@ if(!isset($_SESSION['user'])) {
     ?>
 
     <div class="container-fluid" id="cart">
+
         <div class="row">
-            <div class="col-xs-12 text-center" id="heading">
+            <div class="col-sm-12 text-center">
                 <h2 class="cart-title"> YOUR CART ITEMS </h2>
             </div>
         </div>
-    </div>
-    
-    <?php
-	if(isset($_SESSION['user']))
-	    {   
-              	if(isset($_GET['ID']))
-	            {   
-                        $product=$_GET['ID'];
-                        $quantity=$_GET['quantity'];
-                        $query="SELECT * from cart where Customer='$customer' AND Product='$product'";
-                        $result=mysqli_query($con,$query);
-                        $row = mysqli_fetch_assoc($result);
-                        if(mysqli_num_rows($result)==0)
-	                         { $query="INSERT INTO cart values('$customer','$product','$quantity')"; 
-                              $result=mysqli_query($con,$query);
-                            }
-                        else
-                           { $new=$_GET['quantity'];
-                             $query="UPDATE `cart` SET Quantity=$new WHERE Customer='$customer' AND Product='$product'";
-	                           $result=mysqli_query($con,$query);
-                            }
+
+        <div class="row">
+            <?php
+                $show_cart_query = "SELECT * FROM cart WHERE user_id=".$_SESSION['user_id']." ";
+                $show_cart_query_result = mysqli_query($conn, $show_cart_query);
+
+                if(mysqli_num_rows($show_cart_query_result) == 1) {
+
+                    $item = mysqli_fetch_assoc($show_cart_query_result);
+
+                    echo 
+                    "<div class='panel col-sm-6 col-sm-offset-3 text-center'>
+                        <div class='panel-heading'> Item 1 </div>
+                        <div class='panel-body'>
+                            <img class='image-responsive block-center cart-img' src='".$item['book_img_link']."'> <br>
+                            <div class='item-details'>
+                                Title  : ".$item['book_title']." <br>
+                                Author : ".$item['book_author']." <br>
+                                Publisher : ".$item['book_publisher']." <br>
+                                Category : ".$item['book_category']." <br>
+                            </div>                                                           
+                            <a href='cart.php?remove=".$item['book_id']."' class='btn btn-sm btn-cart-remove'> Remove </a>
+                        </div>
+                    </div>";
+                }
+                else if(mysqli_num_rows($show_cart_query_result) > 1) {
+                    $num_of_item = 1; 
+                    while($item = mysqli_fetch_assoc($show_cart_query_result)) 
+                    {
+                        if($num_of_item % 2 == 1)  $offset= 0;
+                        if($num_of_item % 2 == 0)  $offset= 2;  
+                        echo 
+                        "<div class='panel col-sm-5 col-sm-offset-".$offset." text-center'>
+                            <div class='panel-heading'> Item ". $num_of_item ." </div>
+                            <div class='panel-body'>
+                                <img class='image-responsive block-center cart-img' src='".$item['book_img_link']."'> <br>
+                                <div class='item-details'>
+                                    Title  : ".$item['book_title']." <br>
+                                    Author : ".$item['book_author']." <br>
+                                    Publisher : ".$item['book_publisher']." <br>
+                                    Category : ".$item['book_category']." <br>
+                                </div>                                                           
+                                <a href='cart.php?remove=".$item['book_id']."' class='btn btn-sm btn-cart-remove'> Remove </a>
+                            </div>
+                        </div>";
+                        $num_of_item++;
                     }
-              	$query="SELECT PID,Title,Author,Edition,Quantity,Price FROM cart INNER JOIN products ON cart.Product=products.PID 
-              	        WHERE Customer='$customer'";
-	        $result=mysqli_query($con,$query); 
-                $total=0;
-                if(mysqli_num_rows($result)>0)
-                {    $i=1;
-                     $j=0;
-                     while($row = mysqli_fetch_assoc($result))
-                     {       $path = "img/books/".$row['PID'].".jpg";
-                             $Stotal = $row['Quantity'] * $row['Price'];
-                             if($i % 2 == 1)  $offset= 1;
-                             if($i % 2 == 0)  $offset= 2;                                                
-                             if($j%2==0)
-                                 echo '<div class="row">'; 
-                                 echo '                
-                                      <div class="panel col-xs-12 col-sm-4 col-sm-offset-'.$offset.' col-md-4 col-md-offset-'.$offset.' col-lg-4 col-lg-offset-'.$offset.' text-center" style="color:#D67B22;font-weight:800;">
-                                          <div class="panel-heading">Order '. $i .'
-                                          </div>
-                                          <div class="panel-body">
-			                                                <img class="image-responsive block-center" src="'.$path.'" style="height :100px;"> <br>
-           							                                               Title : '.$row['Title'].'  <br> 
-                                                                        Code : '.$row['PID'].'     <br>        	 
-                                                      									Author : '.$row['Author'].' <br>                            	      
-                                                      									Edition : '.$row['Edition'].' <br>
-                                                      									Quantity : '.$row['Quantity'].' <br>
-                                                      									Price : '.$row['Price'].' <br>
-                                                      									Sub Total : '.$Stotal.' <br>
-                                                                       <a href="cart.php?remove='.$row['PID'].'" class="btn btn-sm" 
-                                                                          style="background:#D67B22;color:white;font-weight:800;">
-                                                                          Remove
-                                                                        </a>
-                                        </div>
-                                    </div>';
-                               if($j % 2==1)
-                                   echo '</div>';                                 
-                               $total=$total + $Stotal; 
-                               $i++;
-                               $j++;                                                 
-                     } 
-                    
-                    echo '<div class="container">
-                              <div class="row">  
-                                 <div class="panel col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4 text-center" style="color:#D67B22;font-weight:800;">
-                                     <div class="panel-heading">TOTAL
-                                     </div>
-                                      <div class="panel-body">'.$total.'
-                                     </div>
-                                 </div>
-                               </div>
-                          </div>
-                         ';
-                     echo '<br> <br>';
-                     echo '<div class="row">
-                             <div class="col-xs-8 col-xs-offset-2  col-sm-4 col-sm-offset-2 col-md-4 col-md-offset-3 col-lg-4 col-lg-offset-3">
-                                  <a href="index.php" class="btn btn-lg" style="background:#D67B22;color:white;font-weight:800;">Continue Shopping</a>
-                             </div>
-                             <div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-2 col-md-4 col-md-offset-1 col-lg-4 ">
-                                  <a href="cart.php?place=true" class="btn btn-lg" style="background:#D67B22;color:white;font-weight:800;margin-top:5px;">Place Order</a>
-                             </div>
-                           </div>
-                           ';
-                } 
-               else
-                     {  
-                        echo ' 
-                         <div class="row">
-                            <div class="col-xs-9 col-xs-offset-3 col-sm-4 col-sm-offset-5 col-md-4 col-md-offset-5">
-                                 <span class="text-center" style="color:#D67B22;font-weight:bold;">&nbsp &nbsp &nbsp &nbspCart Is Empty</span>
-                             </div>
-                         </div>
-                         <div class="row">
-                             <div class="col-xs-9 col-xs-offset-3 col-sm-2 col-sm-offset-5 col-md-2 col-md-offset-5">
-                                  <a href="index.php" class="btn btn-lg" style="background:#D67B22;color:white;font-weight:800;">Do Some Shopping</a>
-                             </div>
-                          </div>';
-                     }               
-	    }
-	else
-	    { 
-	          echo "login to continue";
-	    }
-        echo '</div>';
-	?>
+                }
+                else {
+                    echo 
+                    "<div class='col-sm-12 text-center'>
+                        <img class='img-empty-cart img-responsive' src='img/empty_cart.jpg' alt='Empty Cart'>
+                        <p style='font-size: 25px; margin: 20px;'> You have no items in your shopping cart. </p>
+                    </div>";
+                }
+            ?>
+        <!-- end of 2nd row -->
+        </div>
+    
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <a href="index.php" class="btn btn-lg btn-cont-browsing">Continue Browsing</a>
+            </div>
+        </div>
+        
+    <!-- end of container -->
+    </div>
+
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <?php 
+        if(isset($_SESSION['removecart_sts']) && $_SESSION['removecart_sts'] != "")
+        {
+            ?>
+                <script>
+                    swal({
+                        title: "<?php echo $_SESSION['removecart_sts']; ?>",
+                        icon: "<?php echo $_SESSION['sts_code']; ?>",
+                        button: "Ok",
+                    });
+                </script>
+            <?php
+                unset($_SESSION['removecart_sts']);
+        }
+    ?>
 
 </body>
 </html>		
