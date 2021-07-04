@@ -1,8 +1,12 @@
 var book_data;
 var jsondata;
 
+// Query
+// https://developers.google.com/books/docs/v1/using
+
+
 $.getJSON(
-  "https://www.googleapis.com/books/v1/volumes?q=best%20selling%20books",
+  "https://www.googleapis.com/books/v1/volumes?q=best%20selling%20books&filter=paid-ebooks&maxResults=20",
   function (data) {
     var indexOfData = 0;
 

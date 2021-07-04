@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+if(!isset($_SESSION['user'])) {
+    header("Location:index.php?login=false");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -9,67 +14,76 @@ session_start();
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BRS User Register</title>
+    <title> <?php echo $_SESSION['user']." Account"; ?> </title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    
-    <link href="css/styles.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
 
+    <link href="css/styles.css" rel="stylesheet">
+ 
     <style>
-        .register-box {
-            margin-top: 4%;
+        hr {
+            border-style: solid none none;
+            border-width: 3px;
+            border-color: black;
+            margin: 10px 0;
         }
-        label {
-            font-family: 'Poppins';
-            font-weight: lighter;
+        .current-preference {
+            font-size: 15px;
+            margin: 30px 0;
+            font-weight: 600;
         }
-        .btn-login {
-            font-size: 14px;
-        }
-        .signup-info {
-            font-size: 12px;
+        .preference-data {
+            color: #d67b22;
+            float: right;
         }
     </style>
 </head>
 <body>
-<?php
-include("masterpage/navbar.php");
-?>
+    <?php
+    include("masterpage/navbar.php");
+    ?>
 
-    <div class="container">
+    <div id="user_profile" class="container-fluid">
+
         <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4 register-box">
+            <div class="col-sm-12 text-center">
+                <h2 class="cart-title"> User Preference Setting </h2>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6 user-box">
+
+                <div class="current-preference">
+                    <hr>
+                    <h2 class="text-center cart-title">Current Preference</h2>
+                    <div>
+                        Book Category Preference (1st) : 
+                        <span class="preference-data">
+                            <?php echo $_SESSION['user_prefer_cate1']; ?>
+                        </span>
+                    </div>
+                    <div>
+                        Book Category Preference (2nd) : 
+                        <span class="preference-data"> 
+                            <?php echo $_SESSION['user_prefer_cate2']; ?>
+                        </span>
+                    </div>
+                    <div>
+                        Book Author Preference : 
+                        <span class="preference-data"> 
+                            <?php echo $_SESSION['user_prefer_author']; ?>
+                        </span>
+                    </div>
+                </div>
+
+                <hr>
                 <form action="authenticate.php" method="post">
-                        <div class = "form-group fontuser">
-                            <label for="username">Username</label>
-                            <input id="username" type="text" class="form-control form-control-lg rounded-pill check_username" name="username" placeholder="username" required>
-                            <small class="error_username" style="color: red;"></small>
-                        </div>
-
-                        <div class = "form-group fontuser">
-                            <label for="email">Email</label>
-                            <input id="email" type="email" class="form-control form-control-lg rounded-pill check_email" name="email" placeholder="email" required>
-                            <small class="error_email" style="color: red;"></small>
-                        </div>
-
-                        <div class = "form-group fontpassword">
-                            <label for="password">Password</label>
-                            <input id="password" type="password" class="form-control form-control-lg rounded-pill check_password" name="password" placeholder="password" required>
-                            <small class="error_Password" style="color: red;"></small>
-                        </div>
-
-                        <div class = "form-group fontpassword">
-                            <label for="passwordConf">Confirm Password</label>
-                            <input id="passwordConf" type="password" class="form-control form-control-lg rounded-pill check_confirm_password" name="passwordConf" placeholder="confirm password" required>
-                            <small class="error_confPass" style="color: red;"></small>
-                        </div>
 
                         <div class = "form-group">
-                            <label for="category_prefer1">Book Category Preference (1st)</label>
-                            <select id="category_prefer1" name="category_prefer1" class="form-control" required>
+                            <label for="edit_category_prefer1">Book Category Preference (1st)</label>
+                            <select id="edit_category_prefer1" name="edit_category_prefer1" class="form-control" required>
                                 <option disabled selected value> -- select an option -- </option>
                                 <option>Arts</option>
                                 <option>Business</option>
@@ -91,8 +105,8 @@ include("masterpage/navbar.php");
                         </div>
 
                         <div class = "form-group">
-                            <label for="category_prefer2">Book Category Preference (2nd)</label>
-                            <select id="category_prefer2" name="category_prefer2" class="form-control" required>
+                            <label for="edit_category_prefer2">Book Category Preference (2nd)</label>
+                            <select id="edit_category_prefer2" name="edit_category_prefer2" class="form-control" required>
                                 <option disabled selected value> -- select an option -- </option>
                                 <option>Arts</option>
                                 <option>Business</option>
@@ -114,8 +128,8 @@ include("masterpage/navbar.php");
                         </div>
 
                         <div class = "form-group">
-                            <label for="author_prefer">Book Author Preference</label>
-                            <select id="author_prefer" name="author_prefer" class="form-control" required>
+                            <label for="edit_author_prefer">Book Author Preference</label>
+                            <select id="edit_author_prefer" name="edit_author_prefer" class="form-control" required>
                                 <option disabled selected value> -- select an option -- </option>
                                 <option>Stephen King</option>
                                 <option>J.K. Rowling</option>
@@ -136,36 +150,40 @@ include("masterpage/navbar.php");
                         </div>
 
                         <div class = "form-group">
-                            <button id="submit_button" type="submit" name="signup-btn" class="btn btn-primary btn-block btn-lg rounded-pill btn-login">Register</button>
+                            <button id="submit_button" type="submit" name="update-preference-btn" class="btn btn-primary btn-block btn-lg rounded-pill btn-login">Update Preference</button>
                         </div>
-                        <p class="text-center signup-info">Already a member? <a href="login.php">Sign In</a></p>
                 </form>
+
             </div>
-            <div class="col-md-4"></div>
+            <div class="col-sm-3"></div>
         </div>
+               
     </div>
+
+    <?php
+        include("masterpage/footer.php");  
+    ?>
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="js/validate.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <?php 
-        if(isset($_SESSION['register_sts']) && $_SESSION['register_sts'] != "")
+        if(isset($_SESSION['update_sts']) && $_SESSION['update_sts'] != "")
         {
             ?>
                 <script>
                     swal({
-                        title: "<?php echo $_SESSION['register_sts']; ?>",
+                        title: "<?php echo $_SESSION['update_sts']; ?>",
                         icon: "<?php echo $_SESSION['sts_code']; ?>",
                         button: "Ok",
                     });
                 </script>
             <?php
-                unset($_SESSION['register_sts']);
+                unset($_SESSION['update_sts']);
         }
     ?>
 

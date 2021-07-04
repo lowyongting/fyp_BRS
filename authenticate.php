@@ -41,8 +41,13 @@ if(isset($_POST['signup-btn'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $passwordConf = $_POST['passwordConf'];
+    $cate1 = $_POST['category_prefer1'];
+    $cate2 = $_POST['category_prefer2'];
+    $author_pre = $_POST['author_prefer'];
 
-    $signup_query = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$passwordConf')";
+    $author_prefer = mysqli_real_escape_string($conn, $author_pre);
+
+    $signup_query = "INSERT INTO users (username, email, password, prefer_cate1, prefer_cate2, prefer_author) VALUES ('$username', '$email', '$passwordConf', '$cate1', '$cate2', '$author_prefer')";
     if(mysqli_query($conn, $signup_query)) {
         $_SESSION['register_sts'] = "Your account has been registered successfully! ";
         $_SESSION['sts_code'] = "success";
@@ -71,8 +76,11 @@ if(isset($_POST['login-btn'])){
 
         if($password == $stored_pass) 
         {
-            $_SESSION['user'] = $row['username'];
             $_SESSION['user_id'] = $row['id'];
+            $_SESSION['user'] = $row['username'];
+            $_SESSION['user_prefer_cate1'] = $row['prefer_cate1'];
+            $_SESSION['user_prefer_cate2'] = $row['prefer_cate2'];
+            $_SESSION['user_prefer_author'] = $row['prefer_author'];
             header('Location: index.php');
         }
         else 
@@ -88,6 +96,31 @@ if(isset($_POST['login-btn'])){
         header('Location: login.php');
     }
 
+}
+
+// if user updates his/her preference
+if(isset($_POST['update-preference-btn'])) {
+    $updated_cate1 = $_POST['edit_category_prefer1'];
+    $updated_cate2 = $_POST['edit_category_prefer2'];
+    $updated_author = $_POST['edit_author_prefer'];
+
+    $updated_author_prefer = mysqli_real_escape_string($conn, $updated_author);
+
+    $update_prefer_query = "UPDATE users SET prefer_cate1='$updated_cate1', prefer_cate2='$updated_cate2', prefer_author='$updated_author_prefer' WHERE id='".$_SESSION['user_id']."' ";
+    if(mysqli_query($conn, $update_prefer_query)) {
+        $_SESSION['user_prefer_cate1'] = $updated_cate1;
+        $_SESSION['user_prefer_cate2'] = $updated_cate2;
+        $_SESSION['user_prefer_author'] = $updated_author_prefer;
+
+        $_SESSION['update_sts'] = "Your preference has been updated successfully! ";
+        $_SESSION['sts_code'] = "success";
+        header('Location: user.php');
+    }
+    else {
+        $_SESSION['register_sts'] = "Database internal error occurred! ";
+        $_SESSION['sts_code'] = "error";
+        header('Location: user.php');
+    }
 }
 
 ?>

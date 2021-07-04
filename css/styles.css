@@ -91,6 +91,12 @@ body {
   margin: 30px 0;
   padding: 0 100px 30px;
 }
+#user_profile {
+  border: 1px solid #deeaee;
+  background: #fff;
+  margin: 50px 0;
+  padding: 30px 30px 100px;
+}
 .cart-title {
   margin: 30px auto;
 }

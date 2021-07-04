@@ -15,7 +15,7 @@
                 <li> <a href="register.php" class="btn btn-lg"> <span class="glyphicon glyphicon-user"></span> Register </a> </li>';
             } 
             else
-            {   echo' <li> <a href="#" class="btn btn-lg"> Hello ' .$_SESSION['user']. '.</a></li>
+            {   echo' <li> <a href="user.php" class="btn btn-lg"> ' .$_SESSION['user']. ' </a></li>
                       <li> <a href="cart.php" class="btn btn-lg"> <span class="glyphicon glyphicon-shopping-cart"></span> Cart </a> </li>; 
                       <li> <a href="logout.php" class="btn btn-lg"> <span class="glyphicon glyphicon-log-out"></span> LogOut </a> </li>';
                     
