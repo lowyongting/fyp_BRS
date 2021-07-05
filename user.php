@@ -2,7 +2,7 @@
 session_start();
 
 if(!isset($_SESSION['user'])) {
-    header("Location:index.php?login=false");
+    header("Location:login.php?login=false");
 }
 
 ?>
@@ -35,6 +35,10 @@ if(!isset($_SESSION['user'])) {
         .preference-data {
             color: #d67b22;
             float: right;
+        }
+        #update-preference-btn {
+            width: 50%;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -150,7 +154,7 @@ if(!isset($_SESSION['user'])) {
                         </div>
 
                         <div class = "form-group">
-                            <button id="submit_button" type="submit" name="update-preference-btn" class="btn btn-primary btn-block btn-lg rounded-pill btn-login">Update Preference</button>
+                            <button id="update-preference-btn" type="submit" name="update-preference-btn" class="btn btn-primary btn-block btn-lg rounded-pill btn-login">Update Preference</button>
                         </div>
                 </form>
 

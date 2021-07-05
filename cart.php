@@ -4,7 +4,7 @@ session_start();
 require ('db.php');
 
 if(!isset($_SESSION['user'])) {
-    header("Location:index.php?login=false");
+    header("Location:login.php?login=false");
 }
 
 //If the remove button is clicked

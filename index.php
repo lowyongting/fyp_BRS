@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+if(!isset($_SESSION['user'])) {
+    header("Location:login.php?login=false");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -62,9 +66,60 @@ session_start();
     </div>
 
  
-    <div class="container-fluid text-center" id="new">
-    <h3 style="text-align: left;">POPULAR BOOKS</h3>
+    <div class="container-fluid" id="new">
+
+        <div class="row filtering-section">
+            <h3 style="margin: 10px 0; padding: 0 15px;">Filtering Section</h3>
+            <div class="col-md-2 inner-filtering">
+                <div class="inner-filtering-header">Preference:</div>
+                <div class="inner-filtering-header">Date:</div>
+                <div class="inner-filtering-header">Price:</div>
+            </div>
+            <div class="col-md-2 inner-filtering">
+                <div>
+                    <input id="category_1" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate1']; ?>" checked>
+                    <label for="category_1"> <?php echo $_SESSION['user_prefer_cate1']; ?> </label>
+                </div>
+                <div>
+                    <input id="newest" type="radio" name="date-order" value="Newest to oldest">
+                    <label for="newest">Newest to oldest</label>
+                </div>
+                <div>
+                    <input id="free" type="radio" name="price" value="Free">
+                    <label for="free">Free</label>
+                </div>
+            </div>
+            <div class="col-md-2 inner-filtering">
+                <div>
+                    <input id="category_2" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate2']; ?>">
+                    <label for="category_2"> <?php echo $_SESSION['user_prefer_cate2']; ?> </label>
+                </div>
+                <div>
+                    <input id="relevance" type="radio" name="date-order" value="Relevance" checked>
+                    <label for="relevance">Relevance</label>
+                </div>
+                <div>
+                    <input id="paid" type="radio" name="price" value="Paid" checked>
+                    <label for="paid">Paid</label>
+                </div>
+            </div>
+            <div class="col-md-2 inner-filtering">
+                <div>
+                    <input id="p_author" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_author']; ?>">
+                    <label for="p_author"> <?php echo $_SESSION['user_prefer_author']; ?> </label>
+                </div>
+                <div>
+                    <input id="oldest" type="radio" name="date-order" value="Oldest to newest">
+                    <label for="oldest">Oldest to newest</label>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
+            <h3 class="home-title">POPULAR BOOKS</h3>
+        </div>
+
+        <div class="row text-center">
                 <div class="col-sm-6 col-md-3 col-lg-3">
                     <a href="book.php">
                         <div class="book-block">
@@ -102,7 +157,7 @@ session_start();
                     </a>
                 </div>
         </div>
-        <div class="row">
+        <div class="row text-center">
                 <div class="col-sm-6 col-md-3 col-lg-3">
                     <a href="book.php">
                         <div class="book-block">
@@ -153,35 +208,6 @@ session_start();
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-    <?php 
-        if (isset($_GET['login']) && $_GET['login'] == "false") {
-            ?>
-            <script>
-                swal({
-                        title: "Please login to browse the book.",
-                        icon: "info",
-                        button: "Ok"
-                });
-            </script>
-        <?php
-        }    
-    ?>
-
-    <?php 
-        if (isset($_GET['message'])) {
-            $mssg = $_GET['message'];
-            ?>
-            <script>
-                swal({
-                        title: "<?php echo $mssg ?>",
-                        icon: "success",
-                        button: "Ok"
-                });
-            </script>
-        <?php
-        }    
-    ?>
 
 </body>
 </html>	

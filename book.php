@@ -4,7 +4,7 @@ session_start();
 include("db.php");
 
 if(!isset($_SESSION['user'])) {
-    header("Location:index.php?login=false");
+    header("Location:login.php?login=false");
 }
 
 if(isset($_SESSION['book_data_array'])) {

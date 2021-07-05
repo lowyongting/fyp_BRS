@@ -71,6 +71,22 @@ body {
   display: inline;
   float: left;
 }
+.filtering-section {
+  border: 1px solid #deeaee;
+  background: #fff;
+  margin: 20px 0;
+  padding: 20px;
+}
+.inner-filtering {
+  margin: 10px 0;
+}
+.inner-filtering-header {
+  margin: 4px 0 4px;
+}
+.home-title {
+  margin: 20px 0;
+  padding: 0 20px;
+}
 .book-block {
   margin-top: 20px;
   padding: 5px;

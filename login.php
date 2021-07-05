@@ -89,5 +89,34 @@ include("masterpage/navbar.php");
         }
     ?>
 
+    <?php 
+        if (isset($_GET['login']) && $_GET['login'] == "false") {
+            ?>
+            <script>
+                swal({
+                        title: "Please login to browse the books.",
+                        icon: "info",
+                        button: "Ok"
+                });
+            </script>
+        <?php
+        }    
+    ?>
+
+    <?php 
+        if (isset($_GET['message'])) {
+            $mssg = $_GET['message'];
+            ?>
+            <script>
+                swal({
+                        title: "<?php echo $mssg ?>",
+                        icon: "success",
+                        button: "Ok"
+                });
+            </script>
+        <?php
+        }    
+    ?>
+
 </body>
 </html>	
