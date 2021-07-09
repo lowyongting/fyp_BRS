@@ -1,9 +1,13 @@
 <?php
 session_start();
+include("db.php");
 
 if(!isset($_SESSION['user'])) {
     header("Location:login.php?login=false");
 }
+
+$get_category = "SELECT DISTINCT b_category FROM book";
+$category_result = mysqli_query($conn, $get_category);
 
 ?>
 
@@ -74,12 +78,6 @@ if(!isset($_SESSION['user'])) {
                             <?php echo $_SESSION['user_prefer_cate2']; ?>
                         </span>
                     </div>
-                    <div>
-                        Book Author Preference : 
-                        <span class="preference-data"> 
-                            <?php echo $_SESSION['user_prefer_author']; ?>
-                        </span>
-                    </div>
                 </div>
 
                 <hr>
@@ -89,22 +87,11 @@ if(!isset($_SESSION['user'])) {
                             <label for="edit_category_prefer1">Book Category Preference (1st)</label>
                             <select id="edit_category_prefer1" name="edit_category_prefer1" class="form-control" required>
                                 <option disabled selected value> -- select an option -- </option>
-                                <option>Arts</option>
-                                <option>Business</option>
-                                <option>Photography</option>
-                                <option>Cooking</option>
-                                <option>Computer</option>
-                                <option>Engineering</option>
-                                <option>Health</option>
-                                <option>History</option>
-                                <option>Humor</option>
-                                <option>Law</option>
-                                <option>Fiction</option>
-                                <option>Mystery</option>
-                                <option>Thriller</option>
-                                <option>Sport</option>
-                                <option>Fantasy</option>
-                                <option>Young Adult</option>
+                                <?php
+                                    while($row = mysqli_fetch_assoc($category_result)) {
+                                        echo "<option>".$row['b_category']."</option>";
+                                    }
+                                ?>
                             </select>
                         </div>
 
@@ -112,44 +99,12 @@ if(!isset($_SESSION['user'])) {
                             <label for="edit_category_prefer2">Book Category Preference (2nd)</label>
                             <select id="edit_category_prefer2" name="edit_category_prefer2" class="form-control" required>
                                 <option disabled selected value> -- select an option -- </option>
-                                <option>Arts</option>
-                                <option>Business</option>
-                                <option>Photography</option>
-                                <option>Cooking</option>
-                                <option>Computer</option>
-                                <option>Engineering</option>
-                                <option>Health</option>
-                                <option>History</option>
-                                <option>Humor</option>
-                                <option>Law</option>
-                                <option>Fiction</option>
-                                <option>Mystery</option>
-                                <option>Thriller</option>
-                                <option>Sport</option>
-                                <option>Fantasy</option>
-                                <option>Young Adult</option>
-                            </select>
-                        </div>
-
-                        <div class = "form-group">
-                            <label for="edit_author_prefer">Book Author Preference</label>
-                            <select id="edit_author_prefer" name="edit_author_prefer" class="form-control" required>
-                                <option disabled selected value> -- select an option -- </option>
-                                <option>Stephen King</option>
-                                <option>J.K. Rowling</option>
-                                <option>Martha McPhee</option>
-                                <option>Jess Kidd</option>
-                                <option>Armando Lucas Correa</option>
-                                <option>Megan Miranda</option>
-                                <option>Helen Phillips</option>
-                                <option>Kristin Harmel</option>
-                                <option>Rebecca Serle</option>
-                                <option>Lisa Jewell</option>
-                                <option>Haruki Murakami</option>
-                                <option>Kiley Reid</option>
-                                <option>Mary Kubica</option>
-                                <option>Stephen Graham Jones</option>
-                                <option>None</option>
+                                <?php
+                                    mysqli_data_seek($category_result, 0);
+                                    while($row = mysqli_fetch_assoc($category_result)) {
+                                        echo "<option>".$row['b_category']."</option>";
+                                    }
+                                ?>
                             </select>
                         </div>
 

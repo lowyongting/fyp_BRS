@@ -1,9 +1,13 @@
 <?php
 session_start();
+include("db.php");
 
 if(!isset($_SESSION['user'])) {
     header("Location:login.php?login=false");
 }
+
+// $delete_fault_data = "DELETE FROM book WHERE b_category='' ";
+// mysqli_query($conn, $delete_fault_data);
 
 ?>
 
@@ -69,132 +73,90 @@ if(!isset($_SESSION['user'])) {
     <div class="container-fluid" id="new">
 
         <div class="row filtering-section">
-            <h3 style="margin: 10px 0; padding: 0 15px;">Filtering Section</h3>
-            <div class="col-md-2 inner-filtering">
-                <div class="inner-filtering-header">Preference:</div>
-                <div class="inner-filtering-header">Date:</div>
-                <div class="inner-filtering-header">Price:</div>
-            </div>
-            <div class="col-md-2 inner-filtering">
-                <div>
-                    <input id="category_1" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate1']; ?>" checked>
-                    <label for="category_1"> <?php echo $_SESSION['user_prefer_cate1']; ?> </label>
+
+            <form method="post">
+                <div class="row">
+                    <h3 style="margin: 10px 0; padding: 0 15px;">Filtering Section</h3>
+                    <div class="col-md-2 inner-filtering">
+                        <div class="inner-filtering-header">Preference:</div>
+                    </div>
+                    <div class="col-md-2 inner-filtering">
+                        <div>
+                            <input id="category_1" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate1']; ?>">
+                            <label for="category_1"> <?php echo $_SESSION['user_prefer_cate1']; ?> </label>
+                        </div>
+                    </div>
+                    <div class="col-md-2 inner-filtering">
+                        <div>
+                            <input id="category_2" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate2']; ?>">
+                            <label for="category_2"> <?php echo $_SESSION['user_prefer_cate2']; ?> </label>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <input id="newest" type="radio" name="date-order" value="Newest to oldest">
-                    <label for="newest">Newest to oldest</label>
+
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
+                        <button type="submit" name="filter-btn" class="btn btn-primary btn-block btn-md rounded-pill btn-filter">Filter</button>
+                    </div>
+                    <div class="col-md-2">
+                        <button id="filter_button" type="button" class="btn btn-primary btn-block btn-md rounded-pill btn-filter" >Get Book Data</button>
+                    </div>
                 </div>
-                <div>
-                    <input id="free" type="radio" name="price" value="Free">
-                    <label for="free">Free</label>
-                </div>
-            </div>
-            <div class="col-md-2 inner-filtering">
-                <div>
-                    <input id="category_2" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate2']; ?>">
-                    <label for="category_2"> <?php echo $_SESSION['user_prefer_cate2']; ?> </label>
-                </div>
-                <div>
-                    <input id="relevance" type="radio" name="date-order" value="Relevance" checked>
-                    <label for="relevance">Relevance</label>
-                </div>
-                <div>
-                    <input id="paid" type="radio" name="price" value="Paid" checked>
-                    <label for="paid">Paid</label>
-                </div>
-            </div>
-            <div class="col-md-2 inner-filtering">
-                <div>
-                    <input id="p_author" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_author']; ?>">
-                    <label for="p_author"> <?php echo $_SESSION['user_prefer_author']; ?> </label>
-                </div>
-                <div>
-                    <input id="oldest" type="radio" name="date-order" value="Oldest to newest">
-                    <label for="oldest">Oldest to newest</label>
-                </div>
-            </div>
+            </form>
         </div>
 
-        <div class="row">
-            <h3 class="home-title">POPULAR BOOKS</h3>
-        </div>
+        <!-- Start displaying books based on user preference -->
+        <?php
+            $selected_preference = $_SESSION['user_prefer_cate1'];
+            if(isset($_POST['filter-btn'])) {
+                $selected_preference = $_POST['preferences'];
+            }
+            $view_preference_product_query = "SELECT DISTINCT b_id, b_title, b_img_link FROM book WHERE b_category='".$selected_preference."' ";
+            $view_preference_product_query_result = mysqli_query($conn, $view_preference_product_query);
 
-        <div class="row text-center">
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="book.php">
-                        <div class="book-block">
-                            <img class="block-center book-image" src="">
+            //Initialize item value and counter value
+            $item = 0;
+            $i = 0;
+
+            //Display title
+            echo 
+            "<div class='row'>
+                <h3 class='home-title'>Currently showing: ".$selected_preference." Books</h3>
+            </div>";
+
+            while($book_row = mysqli_fetch_array($view_preference_product_query_result)) {
+
+                if($item % 4 == 0) { echo "<div class='row text-center'>"; }
+                //increment the number of items
+                $item++;
+
+                //get necessary book data to be displayed
+                $book_id = $book_row['b_id'];
+                $book_title = $book_row['b_title'];
+                $book_img = $book_row['b_img_link'];
+
+                //Display book
+                echo 
+                "<div class='col-sm-6 col-md-3 col-lg-3'>
+                    <a href='book.php?id=".$book_id."'>
+                        <div class='book-block'>
+                            <img class='block-center book-image' src='".$book_img."'>
                             <hr>
-                            <div class="book-title"></div>
+                            <div class='book-title'>".$book_title."</div>
                         </div>
                     </a>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="book.php">
-                    <div class="book-block">
-                        <img class="block-center book-image" src="">
-                        <hr>
-                        <div class="book-title"></div>
-                    </div>
-                    </a>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="book.php">
-                    <div class="book-block">
-                        <img class="block-center book-image" src="">
-                        <hr>
-                        <div class="book-title"></div>
-                    </div>
-                    </a>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="book.php">
-                    <div class="book-block">
-                        <img class="block-center book-image" src="">
-                        <hr>
-                        <div class="book-title"></div>
-                    </div>
-                    </a>
-                </div>
-        </div>
-        <div class="row text-center">
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="book.php">
-                        <div class="book-block">
-                            <img class="block-center book-image" src="">
-                            <hr>
-                            <div class="book-title"></div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="book.php">
-                    <div class="book-block">
-                        <img class="block-center book-image" src="">
-                        <hr>
-                        <div class="book-title"></div>
-                    </div>
-                    </a>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="book.php">
-                    <div class="book-block">
-                        <img class="block-center book-image" src="">
-                        <hr>
-                        <div class="book-title"></div>
-                    </div>
-                    </a>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <a href="book.php">
-                    <div class="book-block">
-                        <img class="block-center book-image" src="">
-                        <hr>
-                        <div class="book-title"></div>
-                    </div>
-                    </a>
-                </div>
-        </div>
+                </div>";
+
+                $i++;
+                if($i % 4 == 0) { echo "</div>"; }
+            }
+
+            if($i % 4 != 0) { echo "</div>"; }
+            echo "<br> Total items: ".$i;
+
+        ?>
+
     </div>
 
     <?php
@@ -208,6 +170,6 @@ if(!isset($_SESSION['user'])) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
+    
 </body>
 </html>	
