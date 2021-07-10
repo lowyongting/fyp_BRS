@@ -6,8 +6,12 @@ if(!isset($_SESSION['user'])) {
     header("Location:login.php?login=false");
 }
 
-// $delete_fault_data = "DELETE FROM book WHERE b_category='' ";
+// $delete_fault_data = "DELETE FROM book WHERE id NOT IN (SELECT MIN(id) FROM book GROUP BY b_id)";
 // mysqli_query($conn, $delete_fault_data);
+
+
+// $delete_weird_data = "DELETE FROM book WHERE b_category='Literary Collections' ";
+// mysqli_query($conn, $delete_weird_data);
 
 ?>
 
@@ -80,13 +84,13 @@ if(!isset($_SESSION['user'])) {
                     <div class="col-md-2 inner-filtering">
                         <div class="inner-filtering-header">Preference:</div>
                     </div>
-                    <div class="col-md-2 inner-filtering">
+                    <div class="col-md-3 inner-filtering">
                         <div>
-                            <input id="category_1" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate1']; ?>">
+                            <input id="category_1" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate1']; ?>" required>
                             <label for="category_1"> <?php echo $_SESSION['user_prefer_cate1']; ?> </label>
                         </div>
                     </div>
-                    <div class="col-md-2 inner-filtering">
+                    <div class="col-md-3 inner-filtering">
                         <div>
                             <input id="category_2" type="radio" name="preferences" value="<?php echo $_SESSION['user_prefer_cate2']; ?>">
                             <label for="category_2"> <?php echo $_SESSION['user_prefer_cate2']; ?> </label>
@@ -100,7 +104,7 @@ if(!isset($_SESSION['user'])) {
                         <button type="submit" name="filter-btn" class="btn btn-primary btn-block btn-md rounded-pill btn-filter">Filter</button>
                     </div>
                     <div class="col-md-2">
-                        <button id="filter_button" type="button" class="btn btn-primary btn-block btn-md rounded-pill btn-filter" >Get Book Data</button>
+                        <!-- <button id="filter_button" type="button" class="btn btn-primary btn-block btn-md rounded-pill btn-filter" >Get Book Data</button> -->
                     </div>
                 </div>
             </form>
@@ -112,7 +116,7 @@ if(!isset($_SESSION['user'])) {
             if(isset($_POST['filter-btn'])) {
                 $selected_preference = $_POST['preferences'];
             }
-            $view_preference_product_query = "SELECT DISTINCT b_id, b_title, b_img_link FROM book WHERE b_category='".$selected_preference."' ";
+            $view_preference_product_query = "SELECT b_id, b_title, b_img_link FROM book WHERE b_category='".$selected_preference."' ";
             $view_preference_product_query_result = mysqli_query($conn, $view_preference_product_query);
 
             //Initialize item value and counter value
@@ -139,7 +143,7 @@ if(!isset($_SESSION['user'])) {
                 //Display book
                 echo 
                 "<div class='col-sm-6 col-md-3 col-lg-3'>
-                    <a href='book.php?id=".$book_id."'>
+                    <a href='book.php?id=".$book_id."' target='_blank'>
                         <div class='book-block'>
                             <img class='block-center book-image' src='".$book_img."'>
                             <hr>

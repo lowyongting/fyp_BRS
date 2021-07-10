@@ -21,7 +21,7 @@ $(document).ready(function() {
 });
 
 function getBookData() {
-  $.getJSON("https://www.googleapis.com/books/v1/volumes?q=Social%20Science&filter=paid-ebooks&orderBy=relevance&startIndex=0&maxResults=40",
+  $.getJSON("https://www.googleapis.com/books/v1/volumes?q=Literary Collections&filter=paid-ebooks&orderBy=relevance&startIndex=40&maxResults=40",
     function (data) {
   
       console.log(data);

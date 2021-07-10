@@ -11,12 +11,12 @@ if(!isset($_SESSION['user'])) {
 if(isset($_GET['remove'])) {
     $remove_book_id = $_GET['remove'];
 
-    $get_book_title_query = "SELECT * FROM cart WHERE book_id='$remove_book_id' ";
-    $get_item_result = mysqli_query($conn, $get_book_title_query);
-    if(mysqli_num_rows($get_item_result) > 0) {
+    $get_book_title_query = "SELECT b_title FROM book WHERE b_id='$remove_book_id' ";
+    $get_book_title_query_result = mysqli_query($conn, $get_book_title_query);
+    if(mysqli_num_rows($get_book_title_query_result) > 0) {
 
-        $item_row = mysqli_fetch_assoc($get_item_result);
-        $book_title = $item_row['book_title'];
+        $item_row = mysqli_fetch_assoc($get_book_title_query_result);
+        $book_title = $item_row['b_title'];
         $remove_item_query = "DELETE FROM cart WHERE book_id='$remove_book_id' AND user_id='".$_SESSION['user_id']."' ";
 
         if(mysqli_query($conn, $remove_item_query)) {
@@ -61,7 +61,7 @@ if(isset($_GET['remove'])) {
 
         <div class="row">
             <?php
-                $show_cart_query = "SELECT * FROM cart WHERE user_id=".$_SESSION['user_id']." ";
+                $show_cart_query = "SELECT users.id, book.b_id, book.b_title, book.b_publish_date, book.b_publisher, book.b_category, book.b_author, book.b_price, book.b_img_link FROM users JOIN cart ON id=cart.user_id JOIN book ON b_id=cart.book_id WHERE users.id='".$_SESSION['user_id']."' ";
                 $show_cart_query_result = mysqli_query($conn, $show_cart_query);
 
                 if(mysqli_num_rows($show_cart_query_result) == 1) {
@@ -72,14 +72,16 @@ if(isset($_GET['remove'])) {
                     "<div class='panel col-sm-6 col-sm-offset-3 text-center'>
                         <div class='panel-heading'> Item 1 </div>
                         <div class='panel-body'>
-                            <img class='image-responsive block-center cart-img' src='".$item['book_img_link']."'> <br>
+                            <img class='image-responsive block-center cart-img' src='".$item['b_img_link']."'> <br>
                             <div class='item-details'>
-                                Title  : ".$item['book_title']." <br>
-                                Author : ".$item['book_author']." <br>
-                                Publisher : ".$item['book_publisher']." <br>
-                                Category : ".$item['book_category']." <br>
-                            </div>                                                           
-                            <a href='cart.php?remove=".$item['book_id']."' class='btn btn-sm btn-cart-remove'> Remove </a>
+                                Title  : ".$item['b_title']." <br>
+                                Author : ".$item['b_author']." <br>
+                                Publisher : ".$item['b_publisher']." <br>
+                                Category : ".$item['b_category']." <br>
+                                Price : RM ".$item['b_price']." <br>
+                            </div>                            
+                            <a href='book.php?id=".$item['b_id']."' class='btn btn-sm btn-cart-remove'> View Book Details </a>                               
+                            <a href='cart.php?remove=".$item['b_id']."' class='btn btn-sm btn-cart-remove'> Remove </a>
                         </div>
                     </div>";
                 }
@@ -93,14 +95,16 @@ if(isset($_GET['remove'])) {
                         "<div class='panel col-sm-5 col-sm-offset-".$offset." text-center'>
                             <div class='panel-heading'> Item ". $num_of_item ." </div>
                             <div class='panel-body'>
-                                <img class='image-responsive block-center cart-img' src='".$item['book_img_link']."'> <br>
+                                <img class='image-responsive block-center cart-img' src='".$item['b_img_link']."'> <br>
                                 <div class='item-details'>
-                                    Title  : ".$item['book_title']." <br>
-                                    Author : ".$item['book_author']." <br>
-                                    Publisher : ".$item['book_publisher']." <br>
-                                    Category : ".$item['book_category']." <br>
-                                </div>                                                           
-                                <a href='cart.php?remove=".$item['book_id']."' class='btn btn-sm btn-cart-remove'> Remove </a>
+                                    Title  : ".$item['b_title']." <br>
+                                    Author : ".$item['b_author']." <br>
+                                    Publisher : ".$item['b_publisher']." <br>
+                                    Category : ".$item['b_category']." <br>
+                                    Price : RM ".$item['b_price']." <br>
+                                </div>   
+                                 <a href='book.php?id=".$item['b_id']."' class='btn btn-sm btn-cart-remove'> View Book Details </a>                                                         
+                                <a href='cart.php?remove=".$item['b_id']."' class='btn btn-sm btn-cart-remove'> Remove </a>
                             </div>
                         </div>";
                         $num_of_item++;

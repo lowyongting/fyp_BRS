@@ -7,39 +7,26 @@ if(!isset($_SESSION['user'])) {
     header("Location:login.php?login=false");
 }
 
-if(isset($_SESSION['book_data_array'])) {
-    $book_data_arr = $_SESSION['book_data_array'];
-}
-
-if(isset($_GET['id'])) 
-{
+if(isset($_GET['id'])) {
     $book_id = $_GET['id'];
-    foreach($book_data_arr as $book) 
-    {
-        if($book['id'] == $book_id)
-        {
-            $_SESSION['current_book'] = $book;
-        }
+    $book_info_query = "SELECT * FROM book WHERE b_id='$book_id' ";
+    $book_info_query_result = mysqli_query($conn, $book_info_query);
+
+    if(mysqli_num_rows($book_info_query_result) > 0) {
+        $row_book_info = mysqli_fetch_assoc($book_info_query_result);
     }
 }
 
 //If the add to cart button is clicked
 if(isset($_POST['add-to-cart'])) {
-    $book_title = $_SESSION['current_book']['volumeInfo']['title'];
-    $book_author = $_SESSION['current_book']['volumeInfo']['authors'][0];
-    $book_publisher = $_SESSION['current_book']['volumeInfo']['publisher'];
-    $book_category = $_SESSION['current_book']['volumeInfo']['categories'][0];
-    $book_img_link = $_SESSION['current_book']['volumeInfo']['imageLinks']['thumbnail'];
+    $book_id = $_GET['id'];
+    $user_id = $_SESSION['user_id'];
+    $book_title = $row_book_info['b_title'];
 
     // mysqli_real_escape_string() function escapes special characters in a string for use in an SQL query
-    $b_title = mysqli_real_escape_string($conn, $book_title);
-    $b_author = mysqli_real_escape_string($conn, $book_author);
-    $b_publisher = mysqli_real_escape_string($conn, $book_publisher);
-    $b_category = mysqli_real_escape_string($conn, $book_category);
-    $b_price = mysqli_real_escape_string($conn, $_SESSION['book_price']);
-    $b_img_link = mysqli_real_escape_string($conn, $book_img_link);
+    $b_id = mysqli_real_escape_string($conn, $book_id);
 
-    $addcart_query = "INSERT INTO cart (user_id, book_id, book_title, book_author, book_publisher, book_category, book_price, book_img_link) VALUES ('".$_SESSION['user_id']."', '$book_id', '$b_title', '$b_author', '$b_publisher', '$b_category', '$b_price', '$b_img_link')";
+    $addcart_query = "INSERT INTO cart (user_id, book_id) VALUES ('$user_id', '$book_id')";
     if(mysqli_query($conn, $addcart_query)) 
     {
         $_SESSION['addcart_sts'] = "Item: ".$book_title." has been successfully added to the cart!";
@@ -61,7 +48,7 @@ if(isset($_POST['add-to-cart'])) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> <?php echo $_SESSION['current_book']['volumeInfo']['title']; ?> </title>
+    <title> <?php echo $row_book_info['b_title']; ?> </title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
@@ -92,7 +79,7 @@ if(isset($_POST['add-to-cart'])) {
     <div id="books" class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-6">
-                <img src="<?php echo $_SESSION['current_book']['volumeInfo']['imageLinks']['thumbnail']; ?>" 
+                <img src="<?php echo $row_book_info['b_img_link']; ?>" 
                 alt="" class="center-block current-book-image">
                 <form method="post">
                     <?php
@@ -110,71 +97,21 @@ if(isset($_POST['add-to-cart'])) {
             </div>
 
             <div class="col-sm-12 col-md-12 col-lg-6">
-                <h2> <?php echo $_SESSION['current_book']['volumeInfo']['title']; ?></h2>
+                <h2> <?php echo $row_book_info['b_title']; ?></h2>
 
-                <pre>AUTHOR                <?php 
-                                                if(array_key_exists('authors',$_SESSION['current_book']['volumeInfo']))
-                                                    echo $_SESSION['current_book']['volumeInfo']['authors'][0];
-                                                else
-                                                    echo "unknown";
-                                            ?> </pre>
+                <pre>AUTHOR                <?php echo $row_book_info['b_author']; ?> </pre>
 
-                <pre>PUBLISHER             <?php 
-                                                if(array_key_exists('publisher',$_SESSION['current_book']['volumeInfo']))
-                                                    echo $_SESSION['current_book']['volumeInfo']['publisher']; 
-                                                else
-                                                    echo "unknown";
-                                            ?> </pre> 
+                <pre>PUBLISHER             <?php echo $row_book_info['b_publisher']; ?> </pre> 
                 
-                <pre>PUBLISHED DATE        <?php 
-                                                if(array_key_exists('publishedDate',$_SESSION['current_book']['volumeInfo']))
-                                                    echo $_SESSION['current_book']['volumeInfo']['publishedDate']; 
-                                                else
-                                                    echo "unknown";
-                                            ?> </pre>
+                <pre>PUBLISHED DATE        <?php echo $row_book_info['b_publish_date']; ?> </pre>
 
-                <pre>CATEGORY              <?php 
-                                                if(array_key_exists('categories',$_SESSION['current_book']['volumeInfo']))
-                                                    echo $_SESSION['current_book']['volumeInfo']['categories'][0]; 
-                                                else
-                                                    echo "unknown";
-                                            ?> </pre> 
+                <pre>CATEGORY              <?php echo $row_book_info['b_category']; ?> </pre> 
 
-                <pre>PAGES                 <?php 
-                                                if(array_key_exists('pageCount',$_SESSION['current_book']['volumeInfo']))
-                                                    echo $_SESSION['current_book']['volumeInfo']['pageCount']; 
-                                                else
-                                                    echo "unknown";
-                                            ?> </pre> 
+                <pre>PAGES                 <?php echo $row_book_info['b_page']; ?> </pre> 
 
-                <pre>PRICE                 <?php 
-                                                if(array_key_exists('saleability',$_SESSION['current_book']['saleInfo'])) {
+                <pre>PRICE                 RM <?php echo $row_book_info['b_price']; ?> </pre>
 
-                                                    if($_SESSION['current_book']['saleInfo']['saleability'] == "FOR_SALE") {
-
-                                                        if(array_key_exists('retailPrice',$_SESSION['current_book']['saleInfo'])) 
-                                                        {
-                                                            $_SESSION['book_price'] = $_SESSION['current_book']['saleInfo']['retailPrice']['currencyCode']." ".
-                                                                                      $_SESSION['current_book']['saleInfo']['retailPrice']['amount'];    
-                                                        }
-                                                    }
-                                                    else {
-                                                        $_SESSION['book_price'] = "NOT FOR SALE";
-                                                    }
-                                                    echo $_SESSION['book_price'];
-                                                }
-                                                else {
-                                                    $_SESSION['book_price'] = "unknown";
-                                                    echo $_SESSION['book_price'];
-                                                }
-                                            ?> </pre>
-
-                <pre>DESCRIPTION <br>   <p><?php 
-                                                if(array_key_exists('description',$_SESSION['current_book']['volumeInfo']))
-                                                    echo $_SESSION['current_book']['volumeInfo']['description']; 
-                                                else
-                                                    echo "unknown";
-                                            ?> </p></pre>
+                <pre>DESCRIPTION <br>   <p><?php echo $row_book_info['b_description']; ?> </p></pre>
                 
             </div>
         </div>
