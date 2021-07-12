@@ -10,7 +10,7 @@ if(!isset($_SESSION['user'])) {
 // mysqli_query($conn, $delete_fault_data);
 
 
-// $delete_weird_data = "DELETE FROM book WHERE b_category='Literary Collections' ";
+// $delete_weird_data = "DELETE FROM book WHERE b_category='' ";
 // mysqli_query($conn, $delete_weird_data);
 
 ?>
@@ -102,9 +102,6 @@ if(!isset($_SESSION['user'])) {
                     <div class="col-md-2"></div>
                     <div class="col-md-2">
                         <button type="submit" name="filter-btn" class="btn btn-primary btn-block btn-md rounded-pill btn-filter">Filter</button>
-                    </div>
-                    <div class="col-md-2">
-                        <!-- <button id="filter_button" type="button" class="btn btn-primary btn-block btn-md rounded-pill btn-filter" >Get Book Data</button> -->
                     </div>
                 </div>
             </form>

@@ -2,7 +2,7 @@
 session_start();
 include("db.php");
 
-$get_category = "SELECT DISTINCT b_category FROM book";
+$get_category = "SELECT DISTINCT b_category FROM book GROUP BY b_category";
 $category_result = mysqli_query($conn, $get_category);
 
 ?>

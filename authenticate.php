@@ -78,6 +78,10 @@ if(isset($_POST['login-btn'])){
         {
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['user'] = $row['username'];
+            $_SESSION['user_age'] = $row['age'];
+            $_SESSION['user_gender'] = $row['gender'];
+            $_SESSION['user_location'] = $row['location'];
+            $_SESSION['user_email'] = $row['email'];
             $_SESSION['user_prefer_cate1'] = $row['prefer_cate1'];
             $_SESSION['user_prefer_cate2'] = $row['prefer_cate2'];
             header('Location: index.php');
@@ -112,7 +116,32 @@ if(isset($_POST['update-preference-btn'])) {
         header('Location: user.php');
     }
     else {
-        $_SESSION['register_sts'] = "Database internal error occurred! ";
+        $_SESSION['update_sts'] = "Database internal error occurred! ";
+        $_SESSION['sts_code'] = "error";
+        header('Location: user.php');
+    }
+}
+
+//if user clicks on update profile button
+if(isset($_POST['update-profile-btn'])) {
+    $edit_age = $_POST['edit_age'];
+    $edit_gender = $_POST['edit_gender'];
+    $edit_location = $_POST['edit_location'];
+    $edit_email = $_POST['edit_email'];
+
+    $update_profile_query = "UPDATE users SET age='$edit_age', gender='$edit_gender', location='$edit_location', email='$edit_email' WHERE id='".$_SESSION['user_id']."' ";
+    if(mysqli_query($conn, $update_profile_query)) {
+        $_SESSION['user_age'] = $edit_age;
+        $_SESSION['user_gender'] = $edit_gender;
+        $_SESSION['user_location'] = $edit_location;
+        $_SESSION['user_email'] = $edit_email;
+
+        $_SESSION['update_sts'] = "Your personal profile has been updated successfully! ";
+        $_SESSION['sts_code'] = "success";
+        header('Location: user.php');
+    }
+    else {
+        $_SESSION['update_sts'] = "Database internal error occurred! ";
         $_SESSION['sts_code'] = "error";
         header('Location: user.php');
     }

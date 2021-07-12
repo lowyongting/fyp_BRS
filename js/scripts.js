@@ -11,17 +11,17 @@ var start_i = 0;
 
 $(document).ready(function() {
 
-  //Add the click event of filter button in the home page
-  $("#filter_button").click(function() {
+  var si = 40;
+  for(let i=0; i<=1; i++) {
 
-    getBookData();
-
-  });
-
+    // getBookData(si);
+    si+=40;
+  }
+  
 });
 
-function getBookData() {
-  $.getJSON("https://www.googleapis.com/books/v1/volumes?q=Literary Collections&filter=paid-ebooks&orderBy=relevance&startIndex=40&maxResults=40",
+function getBookData(index) {
+  $.getJSON("https://www.googleapis.com/books/v1/volumes?q=Young Adult Nonfiction&filter=paid-ebooks&orderBy=relevance&startIndex="+index+"&maxResults=40",
     function (data) {
   
       console.log(data);

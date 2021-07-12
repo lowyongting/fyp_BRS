@@ -117,6 +117,99 @@ if(isset($_POST['add-to-cart'])) {
         </div>
     </div>
 
+    <div class="container-fluid">
+    <?php
+            $view_preference_product_query = "SELECT b_id, b_title, b_img_link FROM book WHERE b_category='Fiction' ";
+            $view_preference_product_query_result = mysqli_query($conn, $view_preference_product_query);
+
+            //Initialize item value and counter value
+            $item = 0;
+            $i = 0;
+
+            //Display title
+            echo 
+            "<div class='row'>
+                <h3 class='home-title'>Similar Books</h3>
+            </div>";
+
+            while($book_row = mysqli_fetch_array($view_preference_product_query_result)) {
+
+                if($item % 4 == 0) { echo "<div class='row text-center'>"; }
+                //increment the number of items
+                $item++;
+
+                //get necessary book data to be displayed
+                $book_id = $book_row['b_id'];
+                $book_title = $book_row['b_title'];
+                $book_img = $book_row['b_img_link'];
+
+                //Display book
+                echo 
+                "<div class='col-sm-6 col-md-3 col-lg-3'>
+                    <a href='book.php?id=".$book_id."' target='_blank'>
+                        <div class='book-block'>
+                            <img class='block-center book-image' src='".$book_img."'>
+                            <hr>
+                            <div class='book-title'>".$book_title."</div>
+                        </div>
+                    </a>
+                </div>";
+
+                $i++;
+                if($i % 4 == 0) { echo "</div>"; }
+                if($i == 4) { break; }
+            }
+
+            if($i % 4 != 0) { echo "</div>"; }
+        ?>
+
+        <?php
+            $view_preference_product_query = "SELECT b_id, b_title, b_img_link FROM book WHERE b_category='Art' ";
+            $view_preference_product_query_result = mysqli_query($conn, $view_preference_product_query);
+
+            //Initialize item value and counter value
+            $item = 0;
+            $i = 0;
+
+            //Display title
+            echo 
+            "<div class='row'>
+                <h3 class='home-title'>Similar Users Also Like</h3>
+            </div>";
+
+            while($book_row = mysqli_fetch_array($view_preference_product_query_result)) {
+
+                if($item % 4 == 0) { echo "<div class='row text-center'>"; }
+                //increment the number of items
+                $item++;
+
+                //get necessary book data to be displayed
+                $book_id = $book_row['b_id'];
+                $book_title = $book_row['b_title'];
+                $book_img = $book_row['b_img_link'];
+
+                //Display book
+                echo 
+                "<div class='col-sm-6 col-md-3 col-lg-3'>
+                    <a href='book.php?id=".$book_id."' target='_blank'>
+                        <div class='book-block'>
+                            <img class='block-center book-image' src='".$book_img."'>
+                            <hr>
+                            <div class='book-title'>".$book_title."</div>
+                        </div>
+                    </a>
+                </div>";
+
+                $i++;
+                if($i % 4 == 0) { echo "</div>"; }
+                if($i == 4) { break; }
+            }
+
+            if($i % 4 != 0) { echo "</div>"; }
+        ?>
+
+    </div>
+
     <?php
         include("masterpage/footer.php");  
     ?>
