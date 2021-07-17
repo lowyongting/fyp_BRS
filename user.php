@@ -114,7 +114,7 @@ $category_result = mysqli_query($conn, $get_category);
 				<div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
 
                     <!--------- Account Tab Content ------------>
-					<div class="tab-pane fade active" id="account" role="tabpanel" aria-labelledby="account-tab">
+					<div class="tab-pane fade active in" id="account" role="tabpanel" aria-labelledby="account-tab">
                         <form action="authenticate.php" method="post">
                             <h3 class="mb-4">Account Settings</h3>
                             <div class="row">

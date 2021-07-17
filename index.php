@@ -10,7 +10,7 @@ if(!isset($_SESSION['user'])) {
 // mysqli_query($conn, $delete_fault_data);
 
 
-// $delete_weird_data = "DELETE FROM book WHERE b_category='' ";
+// $delete_weird_data = "DELETE FROM book WHERE b_id='LRbWDwAAQBAJ' ";
 // mysqli_query($conn, $delete_weird_data);
 
 ?>
@@ -169,7 +169,6 @@ if(!isset($_SESSION['user'])) {
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="js/scripts.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     
 </body>

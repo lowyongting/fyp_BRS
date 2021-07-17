@@ -77,7 +77,6 @@ include("masterpage/navbar.php");
                                 <option>United States</option>
                                 <option>United Kingdom</option>
                                 <option>India</option>
-                                <option>China</option>
                             </select>
                         </div>
 

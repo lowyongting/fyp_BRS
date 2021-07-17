@@ -7,13 +7,15 @@ include("db.php");
 $book_json_data = file_get_contents('php://input');
 $book_data_object = json_decode($book_json_data, true);
 var_dump($book_data_object);
-$_SESSION['book_data_array'] = $book_data_object;
 
 foreach($book_data_object as $book) {
 
-    if ($book['volumeInfo']['categories'][0] != "") {
+    if ($book['volumeInfo']['categories'][0] == "Sports & Recreation" && !(stristr($book['volumeInfo']['authors'][0], "") !== false)) {
         continue;
     }
+    // if (!(strcasecmp($book['volumeInfo']['authors'][0], "John C. Scott"))) {
+    //     continue;
+    // }
 
     $book_id = $book['id'];
     $book_title = $book['volumeInfo']['title'];

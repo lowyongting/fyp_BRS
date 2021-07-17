@@ -99,7 +99,7 @@ if(isset($_POST['add-to-cart'])) {
             <div class="col-sm-12 col-md-12 col-lg-6">
                 <h2> <?php echo $row_book_info['b_title']; ?></h2>
 
-                <pre>AUTHOR                <?php echo $row_book_info['b_author']; ?> </pre>
+                <pre>AUTHOR                <span id="current_author"><?php echo $row_book_info['b_author']; ?></span> </pre>
 
                 <pre>PUBLISHER             <?php echo $row_book_info['b_publisher']; ?> </pre> 
                 
@@ -118,9 +118,11 @@ if(isset($_POST['add-to-cart'])) {
     </div>
 
     <div class="container-fluid">
-    <?php
-            $view_preference_product_query = "SELECT b_id, b_title, b_img_link FROM book WHERE b_category='Fiction' ";
-            $view_preference_product_query_result = mysqli_query($conn, $view_preference_product_query);
+
+        <!------------------- Start Generating Similar Books -------------------->
+        <?php
+            $get_similar_books_query = "SELECT * FROM book WHERE NOT b_category='".$row_book_info['b_category']."' ";
+            $get_similar_books_query_result = mysqli_query($conn, $get_similar_books_query);
 
             //Initialize item value and counter value
             $item = 0;
@@ -132,44 +134,93 @@ if(isset($_POST['add-to-cart'])) {
                 <h3 class='home-title'>Similar Books</h3>
             </div>";
 
-            while($book_row = mysqli_fetch_array($view_preference_product_query_result)) {
+            //The explode() function breaks a string into an array.
+            $author_substrings = explode(" ", $row_book_info['b_author']);
 
-                if($item % 4 == 0) { echo "<div class='row text-center'>"; }
-                //increment the number of items
-                $item++;
+            while($similar_book_row = mysqli_fetch_array($get_similar_books_query_result)) {
 
-                //get necessary book data to be displayed
-                $book_id = $book_row['b_id'];
-                $book_title = $book_row['b_title'];
-                $book_img = $book_row['b_img_link'];
+                //The for loop intends to find if any substrings of the current book description contained in the current iteration of the book.
+                foreach($author_substrings as $sub) {
+                    //Get the length of the substring
+                    $substring_length = strlen($sub);
+                    if($substring_length<3) { continue; }
+                    //stripos() executed to find out the position of the first occurrence of a string inside another string.
+                    $position = stripos($similar_book_row['b_author'], $sub);
 
-                //Display book
-                echo 
-                "<div class='col-sm-6 col-md-3 col-lg-3'>
-                    <a href='book.php?id=".$book_id."' target='_blank'>
-                        <div class='book-block'>
-                            <img class='block-center book-image' src='".$book_img."'>
-                            <hr>
-                            <div class='book-title'>".$book_title."</div>
-                        </div>
-                    </a>
-                </div>";
+                    if(!$position) 
+                    {
+                        continue;
+                    }
+                    else 
+                    {
+                        //Start comparing if the current substring of the author exactly match the word found.
+                        $compare_result = substr_compare($similar_book_row['b_author'], $sub, $position, $substring_length, TRUE);
+                        if($compare_result != 0) 
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            if($item % 4 == 0) { echo "<div class='row text-center'>"; }
+                            //increment the number of items
+                            $item++;
 
-                $i++;
-                if($i % 4 == 0) { echo "</div>"; }
-                if($i == 4) { break; }
+                            //get necessary book data to be displayed
+                            $book_id = $similar_book_row['b_id'];
+                            $book_title = $similar_book_row['b_title'];
+                            $book_img = $similar_book_row['b_img_link'];
+
+                            //Display similar books
+                            echo 
+                            "<div class='col-sm-6 col-md-3 col-lg-3'>
+                                <a href='book.php?id=".$book_id."' target='_blank'>
+                                    <div class='book-block'>
+                                        <img class='block-center book-image' src='".$book_img."'>
+                                        <hr>
+                                        <div class='book-title'>".$book_title."</div>
+                                    </div>
+                                </a>
+                            </div>";
+
+                            $i++;
+                            if($i % 4 == 0) { echo "</div>"; }
+                        }
+                    }
+                }
+            // End of while loop 
             }
 
             if($i % 4 != 0) { echo "</div>"; }
         ?>
+        <!------------------- End of Generating Similar Books -------------------->
 
+        <!------------------- Start generating books liked by similar users -------------------->
         <?php
-            $view_preference_product_query = "SELECT b_id, b_title, b_img_link FROM book WHERE b_category='Art' ";
-            $view_preference_product_query_result = mysqli_query($conn, $view_preference_product_query);
+            //Get current logged-in user's data
+            $age = $_SESSION['user_age'];
+            $gender = $_SESSION['user_gender'];
+            $location = $_SESSION['user_location'];
+            $prefer1 = $_SESSION['user_prefer_cate1'];
+            $prefer2 = $_SESSION['user_prefer_cate2'];
 
-            //Initialize item value and counter value
-            $item = 0;
-            $i = 0;
+            //Define age group of users
+            $teenager = array("min"=>"10", "max"=>"19");
+            $adult = array("min"=>"20", "max"=>"45");
+            $middle_age = array("min"=>"46", "max"=>"60");
+            $old_ppl = array("min"=>"60", "max"=>"100");
+            $age_group = array(
+                $teenager, $adult, $middle_age, $old_ppl
+            );
+
+            $locate_similar_users_query = "SELECT * FROM users JOIN cart ON id=cart.user_id JOIN book ON b_id=cart.book_id WHERE (users.gender='$gender' AND users.location='$location') AND NOT id='".$_SESSION['user_id']."' ";
+            $locate_similar_users_query_result = mysqli_query($conn, $locate_similar_users_query);
+
+            /*  If all of the criteria (gender and location) don't match with current logged-in user,
+                then find out the users with either same gender or same location    */
+            if(mysqli_num_rows($locate_similar_users_query_result) == 0) {
+                $locate_similar_users_query = "SELECT * FROM users JOIN cart ON id=cart.user_id JOIN book ON b_id=cart.book_id WHERE (users.gender='$gender' OR users.location='$location') AND NOT id='".$_SESSION['user_id']."' ";
+                $locate_similar_users_query_result = mysqli_query($conn, $locate_similar_users_query);
+            }
 
             //Display title
             echo 
@@ -177,36 +228,62 @@ if(isset($_POST['add-to-cart'])) {
                 <h3 class='home-title'>Similar Users Also Like</h3>
             </div>";
 
-            while($book_row = mysqli_fetch_array($view_preference_product_query_result)) {
-
-                if($item % 4 == 0) { echo "<div class='row text-center'>"; }
-                //increment the number of items
-                $item++;
-
-                //get necessary book data to be displayed
-                $book_id = $book_row['b_id'];
-                $book_title = $book_row['b_title'];
-                $book_img = $book_row['b_img_link'];
-
-                //Display book
-                echo 
-                "<div class='col-sm-6 col-md-3 col-lg-3'>
-                    <a href='book.php?id=".$book_id."' target='_blank'>
-                        <div class='book-block'>
-                            <img class='block-center book-image' src='".$book_img."'>
-                            <hr>
-                            <div class='book-title'>".$book_title."</div>
-                        </div>
-                    </a>
-                </div>";
-
-                $i++;
-                if($i % 4 == 0) { echo "</div>"; }
-                if($i == 4) { break; }
+            if(mysqli_num_rows($locate_similar_users_query_result) == 0) 
+            {
+                echo "<p>No results found. </p>";
             }
+            else 
+            {
+                //Initialize item value and counter value
+                $item = 0;
+                $i = 0;
 
-            if($i % 4 != 0) { echo "</div>"; }
+                while($book_row = mysqli_fetch_array($locate_similar_users_query_result)) 
+                {
+                    //Check if the age group of similar users same with the current logged-in user
+                    foreach($age_group as $ag) 
+                    {
+                        //Skip If not matching with current age group iteration
+                        if(!($ag['min'] <= $book_row['age'] && $book_row['age'] <= $ag['max'])) 
+                        {
+                            continue;
+                        }
+                        //Display item liked by users if age group matched
+                        else 
+                        {
+                            if($item % 4 == 0) { echo "<div class='row text-center'>"; }
+                            //increment the number of items
+                            $item++;
+
+                            //get necessary book data to be displayed
+                            $book_id = $book_row['b_id'];
+                            $book_title = $book_row['b_title'];
+                            $book_img = $book_row['b_img_link'];
+
+                            //Display book
+                            echo 
+                            "<div class='col-sm-6 col-md-3 col-lg-3'>
+                                <a href='book.php?id=".$book_id."' target='_blank'>
+                                    <div class='book-block'>
+                                        <img class='block-center book-image' src='".$book_img."'>
+                                        <hr>
+                                        <div class='book-title'>".$book_title."</div>
+                                    </div>
+                                </a>
+                            </div>";
+
+                            $i++;
+                            if($i % 4 == 0) { echo "</div>"; }
+                        }
+                    }
+                // End of while loop
+                }
+
+                if($i % 4 != 0) { echo "</div>"; }
+            }
+            
         ?>
+        <!------------------- End of generating books liked by similar users -------------------->
 
     </div>
 
@@ -219,7 +296,7 @@ if(isset($_POST['add-to-cart'])) {
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+    <script src="js/scripts.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <?php 
@@ -239,4 +316,4 @@ if(isset($_POST['add-to-cart'])) {
     ?>
 
 </body>
-</html>	
+</html>
