@@ -101,10 +101,10 @@ $category_result = mysqli_query($conn, $get_category);
 							<i class="fa fa-user text-center mr-1"></i> 
 							Account
 						</a>
-						<a class="nav-link" id="password-tab" data-toggle="pill" href="#password" role="tab" aria-controls="password" aria-selected="false">
+						<!-- <a class="nav-link" id="password-tab" data-toggle="pill" href="#password" role="tab" aria-controls="password" aria-selected="false">
 							<i class="fa fa-key text-center mr-1"></i> 
 							Password
-						</a>
+						</a> -->
 						<a class="nav-link" id="preference-tab" data-toggle="pill" href="#preference" role="tab" aria-controls="preference" aria-selected="false">
 							<i class="fa fa-heart text-center mr-1"></i> 
 							Preference

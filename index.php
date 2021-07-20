@@ -6,11 +6,9 @@ if(!isset($_SESSION['user'])) {
     header("Location:login.php?login=false");
 }
 
-// $delete_weird_data = "DELETE FROM book WHERE b_id='LRbWDwAAQBAJ' ";
-// mysqli_query($conn, $delete_weird_data);
 
-// $delete_weird_data = "DELETE FROM book WHERE b_category='Church year sermons' ";
-// mysqli_query($conn, $delete_weird_data);
+$delete_weird_data = "DELETE FROM book WHERE b_category='' ";
+mysqli_query($conn, $delete_weird_data);
 
 ?>
 

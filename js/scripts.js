@@ -14,7 +14,7 @@ $(document).ready(function() {
   let author = $("#current_author").text();
   
   getBookData(author);
-  // getBookData("Games & Activities");
+  // getBookData("House & Home");
 
 });
 
