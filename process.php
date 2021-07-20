@@ -10,13 +10,6 @@ var_dump($book_data_object);
 
 foreach($book_data_object as $book) {
 
-    if ($book['volumeInfo']['categories'][0] == "Sports & Recreation" && !(stristr($book['volumeInfo']['authors'][0], "") !== false)) {
-        continue;
-    }
-    // if (!(strcasecmp($book['volumeInfo']['authors'][0], "John C. Scott"))) {
-    //     continue;
-    // }
-
     $book_id = $book['id'];
     $book_title = $book['volumeInfo']['title'];
     $book_published_date = $book['volumeInfo']['publishedDate'];

@@ -6,11 +6,10 @@ if(!isset($_SESSION['user'])) {
     header("Location:login.php?login=false");
 }
 
-// $delete_fault_data = "DELETE FROM book WHERE id NOT IN (SELECT MIN(id) FROM book GROUP BY b_id)";
-// mysqli_query($conn, $delete_fault_data);
-
-
 // $delete_weird_data = "DELETE FROM book WHERE b_id='LRbWDwAAQBAJ' ";
+// mysqli_query($conn, $delete_weird_data);
+
+// $delete_weird_data = "DELETE FROM book WHERE b_category='Church year sermons' ";
 // mysqli_query($conn, $delete_weird_data);
 
 ?>
@@ -113,7 +112,9 @@ if(!isset($_SESSION['user'])) {
             if(isset($_POST['filter-btn'])) {
                 $selected_preference = $_POST['preferences'];
             }
-            $view_preference_product_query = "SELECT b_id, b_title, b_img_link FROM book WHERE b_category='".$selected_preference."' ";
+            $esp_preference = mysqli_real_escape_string($conn, $selected_preference);
+
+            $view_preference_product_query = "SELECT b_id, b_title, b_img_link FROM book WHERE b_category='".$esp_preference."' ";
             $view_preference_product_query_result = mysqli_query($conn, $view_preference_product_query);
 
             //Initialize item value and counter value

@@ -47,7 +47,10 @@ if(isset($_POST['signup-btn'])) {
     $cate1 = $_POST['category_prefer1'];
     $cate2 = $_POST['category_prefer2'];
 
-    $signup_query = "INSERT INTO users (username, age, gender, location, email, password, prefer_cate1, prefer_cate2) VALUES ('$username', '$age', '$gender', '$location', '$email', '$passwordConf', '$cate1', '$cate2')";
+    $cate_1 = mysqli_real_escape_string($conn, $cate1);
+    $cate_2 = mysqli_real_escape_string($conn, $cate2);
+
+    $signup_query = "INSERT INTO users (username, age, gender, location, email, password, prefer_cate1, prefer_cate2) VALUES ('$username', '$age', '$gender', '$location', '$email', '$passwordConf', '$cate_1', '$cate_2')";
     if(mysqli_query($conn, $signup_query)) {
         $_SESSION['register_sts'] = "Your account has been registered successfully! ";
         $_SESSION['sts_code'] = "success";
@@ -106,7 +109,10 @@ if(isset($_POST['update-preference-btn'])) {
     $updated_cate1 = $_POST['edit_category_prefer1'];
     $updated_cate2 = $_POST['edit_category_prefer2'];
 
-    $update_preference_query = "UPDATE users SET prefer_cate1='$updated_cate1', prefer_cate2='$updated_cate2' WHERE id='".$_SESSION['user_id']."' ";
+    $esp_updated_cate1 = mysqli_real_escape_string($conn, $updated_cate1);
+    $esp_updated_cate2 = mysqli_real_escape_string($conn, $updated_cate2);
+
+    $update_preference_query = "UPDATE users SET prefer_cate1='$esp_updated_cate1', prefer_cate2='$esp_updated_cate2' WHERE id='".$_SESSION['user_id']."' ";
     if(mysqli_query($conn, $update_preference_query)) {
         $_SESSION['user_prefer_cate1'] = $updated_cate1;
         $_SESSION['user_prefer_cate2'] = $updated_cate2;

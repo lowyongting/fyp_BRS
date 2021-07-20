@@ -14,6 +14,7 @@ $(document).ready(function() {
   let author = $("#current_author").text();
   
   getBookData(author);
+  // getBookData("Games & Activities");
 
 });
 
@@ -44,7 +45,7 @@ function getBookDatabyAuthor(q) {
 }
 
 function getBookData(q) {
-  $.getJSON("https://www.googleapis.com/books/v1/volumes?q="+q+"&filter=paid-ebooks&orderBy=relevance&startIndex=0&maxResults=20",
+  $.getJSON("https://www.googleapis.com/books/v1/volumes?q="+q+"&filter=paid-ebooks&orderBy=relevance&startIndex=20&maxResults=30",
     function (data) {
   
       console.log(data);

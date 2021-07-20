@@ -74,9 +74,6 @@ include("masterpage/navbar.php");
                                 <option disabled selected value> -- select an option -- </option>
                                 <option>Malaysia</option>
                                 <option>Singapore</option>
-                                <option>United States</option>
-                                <option>United Kingdom</option>
-                                <option>India</option>
                             </select>
                         </div>
 
