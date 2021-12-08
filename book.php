@@ -22,11 +22,12 @@ if(isset($_POST['add-to-cart'])) {
     $book_id = $_GET['id'];
     $user_id = $_SESSION['user_id'];
     $book_title = $row_book_info['b_title'];
+    $quantity = 1;
 
     // mysqli_real_escape_string() function escapes special characters in a string for use in an SQL query
     $b_id = mysqli_real_escape_string($conn, $book_id);
 
-    $addcart_query = "INSERT INTO cart (user_id, book_id) VALUES ('$user_id', '$book_id')";
+    $addcart_query = "INSERT INTO cart (user_id, book_id, quantity) VALUES ('$user_id', '$book_id', '$quantity')";
     if(mysqli_query($conn, $addcart_query)) 
     {
         $_SESSION['addcart_sts'] = "Item: ".$book_title." has been successfully added to the cart!";

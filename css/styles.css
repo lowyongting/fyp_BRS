@@ -121,7 +121,7 @@ body {
   border: 1px solid #d67b22;
   padding-left: 0px;
   padding-right: 0px;
-  color: #D67B22;
+  color: #d67b22;
   font-weight: 800;
 }
 .panel-heading {
@@ -135,7 +135,7 @@ body {
   margin: 20px 0;
 }
 .btn-cart-remove {
-  background: #D67B22;
+  background: #d67b22;
   color: white;
   font-weight: 800;
 }
@@ -145,8 +145,8 @@ body {
   height: 300px;
 }
 .btn-cont-browsing {
-  background:#D67B22;
-  color:white;
+  background: #d67b22;
+  color: white;
   font-weight: 800;
 }
 .btn-cont-browsing:hover {

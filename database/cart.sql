@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2021 at 06:00 PM
+-- Generation Time: Dec 08, 2021 at 11:46 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -30,52 +30,60 @@ SET time_zone = "+00:00";
 CREATE TABLE `cart` (
   `cart_id` int(200) NOT NULL,
   `user_id` int(200) NOT NULL,
-  `book_id` varchar(200) NOT NULL
+  `book_id` varchar(200) NOT NULL,
+  `quantity` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cart`
 --
 
-INSERT INTO `cart` (`cart_id`, `user_id`, `book_id`) VALUES
-(5, 1, '8URjCwAAQBAJ'),
-(6, 2, '2oCTDwAAQBAJ'),
-(7, 2, 'R7TtDwAAQBAJ'),
-(9, 3, 'EjX-DwAAQBAJ'),
-(10, 3, 'MqdSIpKgEZMC'),
-(11, 4, 'kU5sAAAAQBAJ'),
-(14, 1, 'R6FZwlmQMuoC'),
-(15, 4, 'RBFxBAAAQBAJ'),
-(16, 6, 'aIRSDwAAQBAJ'),
-(17, 6, '2SnvBQAAQBAJ'),
-(18, 7, 'Amg_BAAAQBAJ'),
-(19, 7, 'A0F9AwAAQBAJ'),
-(20, 8, 'SJXkCgAAQBAJ'),
-(21, 8, 'IqPcAwAAQBAJ'),
-(22, 9, '6fljDwAAQBAJ'),
-(23, 9, 'o2kaAwAAQBAJ'),
-(24, 10, 'xogGqJzowKYC'),
-(25, 10, '5HAWEAAAQBAJ'),
-(26, 11, 'CQXFDwAAQBAJ'),
-(27, 11, 'EmMGEAAAQBAJ'),
-(28, 13, '0b6z-FayzAwC'),
-(29, 13, '8w5FDwAAQBAJ'),
-(30, 12, '6E-SDwAAQBAJ'),
-(31, 12, 'RYkHEAAAQBAJ'),
-(32, 14, '3FlxiXCk6SEC'),
-(33, 14, 'BClH3ZE3iPAC'),
-(34, 15, 'WhsEAwAAQBAJ'),
-(35, 15, '5AtwDQAAQBAJ'),
-(36, 16, '-Edm774ZhVwC'),
-(37, 16, '6Hf3DwAAQBAJ'),
-(38, 17, '2qMvDwAAQBAJ'),
-(39, 18, 'Xc4apEZIM0AC'),
-(40, 18, 'KCJjDwAAQBAJ'),
-(41, 19, 'FhF4BgAAQBAJ'),
-(42, 19, '3nZpBAAAQBAJ'),
-(43, 20, 'N2AuDwAAQBAJ'),
-(44, 20, '594WCQAAQBAJ'),
-(45, 21, '1HJODwAAQBAJ');
+INSERT INTO `cart` (`cart_id`, `user_id`, `book_id`, `quantity`) VALUES
+(5, 1, '8URjCwAAQBAJ', 1),
+(6, 2, '2oCTDwAAQBAJ', 11),
+(7, 2, 'R7TtDwAAQBAJ', 13),
+(9, 3, 'EjX-DwAAQBAJ', 3),
+(10, 3, 'MqdSIpKgEZMC', 2),
+(11, 4, 'kU5sAAAAQBAJ', 15),
+(15, 4, 'RBFxBAAAQBAJ', 6),
+(16, 6, 'aIRSDwAAQBAJ', 1),
+(17, 6, '2SnvBQAAQBAJ', 1),
+(18, 7, 'Amg_BAAAQBAJ', 1),
+(19, 7, 'A0F9AwAAQBAJ', 1),
+(20, 8, 'SJXkCgAAQBAJ', 1),
+(21, 8, 'IqPcAwAAQBAJ', 1),
+(22, 9, '6fljDwAAQBAJ', 1),
+(23, 9, 'o2kaAwAAQBAJ', 1),
+(24, 10, 'xogGqJzowKYC', 1),
+(25, 10, '5HAWEAAAQBAJ', 1),
+(26, 11, 'CQXFDwAAQBAJ', 1),
+(27, 11, 'EmMGEAAAQBAJ', 1),
+(28, 13, '0b6z-FayzAwC', 1),
+(29, 13, '8w5FDwAAQBAJ', 1),
+(31, 12, 'RYkHEAAAQBAJ', 3),
+(32, 14, '3FlxiXCk6SEC', 1),
+(33, 14, 'BClH3ZE3iPAC', 1),
+(34, 15, 'WhsEAwAAQBAJ', 1),
+(35, 15, '5AtwDQAAQBAJ', 1),
+(36, 16, '-Edm774ZhVwC', 1),
+(37, 16, '6Hf3DwAAQBAJ', 1),
+(38, 17, '2qMvDwAAQBAJ', 1),
+(41, 19, 'FhF4BgAAQBAJ', 1),
+(42, 19, '3nZpBAAAQBAJ', 1),
+(43, 20, 'N2AuDwAAQBAJ', 1),
+(44, 20, '594WCQAAQBAJ', 1),
+(45, 21, '1HJODwAAQBAJ', 4),
+(46, 1, '-FgoDwAAQBAJ', 1),
+(47, 22, 'BGpACwAAQBAJ', 1),
+(48, 22, '76AlAgAAQBAJ', 1),
+(49, 3, 'HQqWDwAAQBAJ', 3),
+(50, 20, 'BGNjDwAAQBAJ', 1),
+(51, 4, 'bC0gk3t8d8AC', 3),
+(52, 18, 'PCJjDwAAQBAJ', 5),
+(53, 18, 'HeVaDwAAQBAJ', 2),
+(54, 18, '1HJODwAAQBAJ', 4),
+(57, 18, 'KCJjDwAAQBAJ', 8),
+(58, 3, '0cDeDwAAQBAJ', 6);
 
 --
 -- Indexes for dumped tables
@@ -97,7 +105,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cart_id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `cart_id` int(200) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- Constraints for dumped tables
